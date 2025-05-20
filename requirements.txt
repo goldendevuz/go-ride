@@ -20,3 +20,4 @@ environs
 pytest
 pytest-factoryboy
 drf-standardized-errors
+psycopg

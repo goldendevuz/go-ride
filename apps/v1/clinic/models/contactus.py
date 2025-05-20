@@ -2,7 +2,6 @@ from django.db import models
 
 from apps.v1.shared.models import BaseModel
 
-
 class ContactUs(BaseModel):
     title = models.CharField(max_length=100)
     icon = models.CharField(max_length=100, help_text="Icon CSS class or name")
