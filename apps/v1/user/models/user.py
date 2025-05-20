@@ -1,16 +1,14 @@
 import random
 import uuid
-from datetime import datetime, timedelta
-
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db import models
-from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.v1.shared.models import BaseModel
+from .userconfirmation import UserConfirmation
 
-ORDINARY_USER, MANAGER, ADMIN = ("ordinary_user", 'manager', 'admin')
+PATIENT, DOCTOR, ADMIN = ("patient", 'doctor', 'admin')
 VIA_EMAIL, VIA_PHONE = ("via_email", "via_phone")
 NEW, CODE_VERIFIED, DONE, PHOTO_DONE = ('new', 'code_verified', 'done', 'photo_done')
 
@@ -20,9 +18,9 @@ phone_regex = RegexValidator(
 )
 
 class User(AbstractUser, BaseModel):
-    USER_ROLES = (
-        (ORDINARY_USER, ORDINARY_USER),
-        (MANAGER, MANAGER),
+    ROLE = (
+        (PATIENT, PATIENT),
+        (DOCTOR, DOCTOR),
         (ADMIN, ADMIN)
     )
     AUTH_TYPE_CHOICES = (
@@ -36,13 +34,14 @@ class User(AbstractUser, BaseModel):
         (PHOTO_DONE, PHOTO_DONE)
     )
 
-    user_roles = models.CharField(max_length=31, choices=USER_ROLES, default=ORDINARY_USER)
+    role = models.CharField(max_length=31, choices=ROLE, default=PATIENT)
     auth_type = models.CharField(max_length=31, choices=AUTH_TYPE_CHOICES)
     auth_status = models.CharField(max_length=31, choices=AUTH_STATUS, default=NEW)
     email = models.EmailField(null=True, blank=True)
-    phone_number = models.CharField(max_length=13, null=True, blank=True, validators=[phone_regex])
+    phone = models.CharField(max_length=13, null=True, blank=True, validators=[phone_regex])
     photo = models.ImageField(upload_to='user_photos/', null=True, blank=True,
                               validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'heic', 'heif'])])
+    remember_me = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -98,29 +97,3 @@ class User(AbstractUser, BaseModel):
         self.check_username()
         self.check_pass()
         self.hashing_password()
-
-PHONE_EXPIRE = 5
-EMAIL_EXPIRE = 1
-
-
-class UserConfirmation(BaseModel):
-    TYPE_CHOICES = (
-        (VIA_PHONE, VIA_PHONE),
-        (VIA_EMAIL, VIA_EMAIL)
-    )
-    code = models.CharField(max_length=4)
-    verify_type = models.CharField(max_length=31, choices=TYPE_CHOICES)
-    verify_value = models.CharField(max_length=31, null=True, blank=True)
-    user = models.ForeignKey(User, models.CASCADE, related_name='verify_codes')
-    expiration_time = models.DateTimeField(null=True)
-    is_confirmed = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.user.__str__())
-
-    def save(self, *args, **kwargs):
-        if self.verify_type == VIA_EMAIL:  # 30-mart 11-33 + 5minutes
-            self.expiration_time = timezone.now() + timedelta(minutes=EMAIL_EXPIRE)
-        else:
-            self.expiration_time = timezone.now() + timedelta(minutes=PHONE_EXPIRE)
-        super(UserConfirmation, self).save(*args, **kwargs)

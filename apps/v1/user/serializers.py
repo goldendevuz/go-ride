@@ -11,8 +11,6 @@ from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_
 from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
-from icecream import ic
-
 
 class SignUpSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
@@ -76,7 +74,7 @@ class SignUpSerializer(serializers.ModelSerializer):
                 "message": "Bu email allaqachon ma'lumotlar bazasida bor"
             }
             raise ValidationError(data)
-        elif value and User.objects.filter(phone_number=value, auth_status__in=[CODE_VERIFIED, DONE, PHOTO_DONE]).exists():
+        elif value and User.objects.filter(phone=value, auth_status__in=[CODE_VERIFIED, DONE, PHOTO_DONE]).exists():
             data = {
                 "message": "Bu telefon raqami allaqachon ma'lumotlar bazasida bor"
             }
@@ -165,14 +163,14 @@ class LoginSerializer(TokenObtainPairSerializer):
         self.fields['username'] = serializers.CharField(required=False, read_only=True)
 
     def auth_validate(self, data):
-        user_input = data.get('userinput')  # email, phone_number, username
+        user_input = data.get('userinput')  # email, phone, username
         if check_user_type(user_input) == 'username':
             username = user_input
         elif check_user_type(user_input) == "email":  # Anora@gmail.com   -> anOra@gmail.com
             user = self.get_user(email__iexact=user_input) # user get method orqali user o'zgartiruvchiga biriktirildi
             username = user.username
         elif check_user_type(user_input) == 'phone':
-            user = self.get_user(phone_number=user_input)
+            user = self.get_user(phone=user_input)
             username = user.username
         else:
             data = {
@@ -215,29 +213,29 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def get_user(self, **kwargs):
         users = User.objects.filter(**kwargs)
-        # ic(users)
-        
+        # ic(user)
+
         if not users.exists():
             raise ValidationError(
                 {
                     'message': "User account not found"
                 }
             )
-        
+
         if users.count() > 1:
-            # Handle duplicate credentials: Decide how to handle multiple users
+            # Handle duplicate credentials: Decide how to handle multiple user
             # For example, raising an error or selecting the user with a more specific status
             # Here, I'm using a more specific filter to handle duplicates
             users = users.filter(auth_status=PHOTO_DONE)  # Adjust this logic based on your needs
-            
+
             if users.count() > 1:
-                # Still multiple users after filtering, raise an error or handle as needed
+                # Still multiple user after filtering, raise an error or handle as needed
                 raise ValidationError(
                     {
                         'message': "Duplicate user accounts found"
                     }
                 )
-        
+
         return users.first()
 
 
@@ -283,7 +281,7 @@ class ResetPasswordSerializer(serializers.Serializer):
                     'message': "Email yoki telefon raqami kiritilishi shart!"
                 }
             )
-        user = User.objects.filter(Q(phone_number=username_phone_email) | Q(email=username_phone_email))
+        user = User.objects.filter(Q(phone=username_phone_email) | Q(email=username_phone_email))
         if not user.exists():
             raise NotFound(detail="User not found")
         attrs['user'] = user.first()

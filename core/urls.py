@@ -8,7 +8,7 @@ from core.settings import MEDIA_URL, MEDIA_ROOT, STATIC_URL, STATIC_ROOT
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-    path(API_V1_URL+'user/', include('apps.v1.users.urls')),
+    path(API_V1_URL+'user/', include('apps.v1.user.urls')),
     path(API_V1_URL+'api-auth/', include('rest_framework.urls')),  # Important for login/logout
     # path('restwind/', include('restwind.urls')),    # Restwind UI
 ]

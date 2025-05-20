@@ -31,8 +31,7 @@ INSTALLED_APPS = [
 ]
 
 THIRD_APPS = {
-    # 'drf_material',
-    "rest_wind",
+    'drf_material',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -47,8 +46,12 @@ THIRD_APPS = {
 }
 
 LOCAL_APPS = [
-    'apps.v1.users',
+    'apps.v1.user',
     'apps.v1.shared',
+    'apps.v1.doctor',
+    'apps.v1.clinic',
+    'apps.v1.appointment',
+    'apps.v1.system',
 ]
 
 INSTALLED_APPS += THIRD_APPS
@@ -197,7 +200,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'user.User'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

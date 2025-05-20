@@ -66,7 +66,7 @@ class VerifyAPIView(APIView):
         if user.auth_status == NEW:
             user.auth_status = CODE_VERIFIED
             if usr.verify_type == VIA_PHONE:
-                user.phone_number = usr.verify_value
+                user.phone = usr.verify_value
             elif usr.verify_type == VIA_EMAIL:
                 user.email = usr.verify_value
             user.save()
@@ -92,7 +92,7 @@ class GetNewVerification(APIView):
             send_email(user.email, code)
         elif user.auth_type == VIA_PHONE:
             code = user.create_verify_code(VIA_PHONE)
-            send_phone_code(user.phone_number, code)
+            send_phone_code(user.phone, code)
         else:
             data = {
                 "message": "Email yoki telefon raqami notogri"
@@ -132,7 +132,7 @@ class UpdateUserInformationView(UpdateAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         super(UpdateUserInformationView, self).partial_update(request, *args, **kwargs)
-        
+
         data = {
             'success': True,
             "message": "User updated successfully",
@@ -150,7 +150,7 @@ class ChangeUserPhotoView(APIView):
             user = request.user
             serializer.update(user, serializer.validated_data)
             return success_response("Rasm muvaffaqiyatli o'zgartirildi", status_code=status.HTTP_200_OK)
-        
+
         # Let your custom exception handler deal with it
         raise ValidationError(serializer.errors)
 
