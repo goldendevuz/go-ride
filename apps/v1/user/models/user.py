@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.v1.shared.models import BaseModel
 from .userconfirmation import UserConfirmation
+from ..managers import UserManager
 
 PATIENT, DOCTOR, ADMIN = ("patient", 'doctor', 'admin')
 VIA_EMAIL, VIA_PHONE = ("via_email", "via_phone")
@@ -33,7 +34,7 @@ class User(AbstractUser, BaseModel):
         (DONE, DONE),
         (PHOTO_DONE, PHOTO_DONE)
     )
-
+    objects = UserManager()
     role = models.CharField(max_length=31, choices=ROLE, default=PATIENT)
     auth_type = models.CharField(max_length=31, choices=AUTH_TYPE_CHOICES)
     auth_status = models.CharField(max_length=31, choices=AUTH_STATUS, default=NEW)
