@@ -21,13 +21,25 @@ class PaymentResource(resources.ModelResource):
 class NotificationAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [NotificationResource]
     list_display = tuple(f.name for f in Notification._meta.fields if f.name not in ('id',))
+    list_filter = ()
+    search_fields = ('title', 'message')
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-created_at',)
 
 @admin.register(NotificationSetting)
 class NotificationSettingAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [NotificationSettingResource]
     list_display = tuple(f.name for f in NotificationSetting._meta.fields if f.name not in ('id',))
+    list_filter = ()
+    search_fields = ('user__username',)
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-created_at',)
 
 @admin.register(Payment)
 class PaymentAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [PaymentResource]
     list_display = tuple(f.name for f in Payment._meta.fields if f.name not in ('id',))
+    list_filter = ('status', 'method')
+    search_fields = ('transaction_id', 'user__username')
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-created_at',)

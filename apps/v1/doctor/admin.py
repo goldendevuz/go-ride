@@ -29,7 +29,7 @@ class WorkingHourResource(resources.ModelResource):
 class DoctorAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [DoctorResource]
     list_display = tuple(f.name for f in Doctor._meta.fields if f.name not in ('id',))
-    list_filter = ('specialty', 'owner', 'is_active')  # misol uchun, o'zingizga moslab o'zgartiring
+    list_filter = ('specialty',)
     search_fields = ('owner__username', 'owner__email', 'specialty__name')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
@@ -56,7 +56,7 @@ class HistoryAdmin(ImportExportModelAdmin, BaseAdmin):
 class SecuritySettingAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [SecuritySettingResource]
     list_display = tuple(f.name for f in SecuritySetting._meta.fields if f.name not in ('id',))
-    list_filter = ('user', 'notifications_enabled')  # agar mavjud bo'lsa, o'zgartiring
+    list_filter = ('user',)
     search_fields = ('user__username',)
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)

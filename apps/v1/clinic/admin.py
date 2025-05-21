@@ -29,16 +29,16 @@ class SpecialtyResource(resources.ModelResource):
 class BannerAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [BannerResource]
     list_display = tuple(f.name for f in Banner._meta.fields if f.name not in ('id',))
-    list_filter = ('is_active', 'position')
+    list_filter = ('is_active',)
     search_fields = ('title',)
     readonly_fields = ('created_at', 'updated_at')
-    ordering = ('position',)
+    ordering = ('title',)
 
 @admin.register(ContactUs)
 class ContactUsAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [ContactUsResource]
     list_display = tuple(f.name for f in ContactUs._meta.fields if f.name not in ('id',))
-    list_filter = ('status',)
+    list_filter = ()
     search_fields = ('email', 'subject')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
@@ -47,7 +47,7 @@ class ContactUsAdmin(ImportExportModelAdmin, BaseAdmin):
 class HospitalAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [HospitalResource]
     list_display = tuple(f.name for f in Hospital._meta.fields if f.name not in ('id',))
-    list_filter = ('city', 'is_active')
+    list_filter = ()
     search_fields = ('name', 'address')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('name',)
@@ -56,16 +56,16 @@ class HospitalAdmin(ImportExportModelAdmin, BaseAdmin):
 class ServiceAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [ServiceResource]
     list_display = tuple(f.name for f in Service._meta.fields if f.name not in ('id',))
-    list_filter = ('hospital', 'specialty', 'is_active')
+    list_filter = ('is_active',)
     search_fields = ('name',)
     readonly_fields = ('created_at', 'updated_at')
-    ordering = ('name',)
+    ordering = ('title',)
 
 @admin.register(Specialty)
 class SpecialtyAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [SpecialtyResource]
     list_display = tuple(f.name for f in Specialty._meta.fields if f.name not in ('id',))
-    list_filter = ('category',)
+    list_filter = ()
     search_fields = ('name',)
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('name',)

@@ -29,7 +29,7 @@ class ReviewLikeResource(resources.ModelResource):
 class AppointmentAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [AppointmentResource]
     list_display = tuple(f.name for f in Appointment._meta.fields if f.name not in ('id',))
-    list_filter = ('status', 'doctor', 'patient', 'date')
+    list_filter = ('status', 'doctor', 'date')
     search_fields = ('doctor__owner__username', 'patient__username', 'status')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('-date',)
@@ -38,7 +38,7 @@ class AppointmentAdmin(ImportExportModelAdmin, BaseAdmin):
 class RateAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [RateResource]
     list_display = tuple(f.name for f in Rate._meta.fields if f.name not in ('id',))
-    list_filter = ('appointment', 'rating')
+    list_filter = ()
     search_fields = ('appointment__doctor__owner__username', 'appointment__patient__username')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
@@ -47,7 +47,7 @@ class RateAdmin(ImportExportModelAdmin, BaseAdmin):
 class ReasonAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [ReasonResource]
     list_display = tuple(f.name for f in Reason._meta.fields if f.name not in ('id',))
-    list_filter = ('type',)
+    list_filter = ()
     search_fields = ('description',)
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
