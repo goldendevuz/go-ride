@@ -26,18 +26,14 @@ class CustomUserForm(forms.ModelForm):
 @admin.register(Profile)
 class ProfileAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [ProfileResource]
-    list_display = tuple(f.name for f in Profile._meta.fields if f.name not in (
-        'id',
-    ))
+    list_display = tuple(f.name for f in Profile._meta.fields if f.name not in ('id',))
     list_filter = ('gender',)
     search_fields = ('user__username',)
 
 @admin.register(UserConfirmation)
 class UserConfirmationAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [UserConfirmationResource]
-    list_display = tuple(f.name for f in UserConfirmation._meta.fields if f.name not in (
-        'id',
-    ))
+    list_display = tuple(f.name for f in UserConfirmation._meta.fields if f.name not in ('id',))
     list_filter = ('verify_type', 'is_confirmed')
     search_fields = ('verify_value', 'user__username')
 
@@ -45,9 +41,7 @@ class UserConfirmationAdmin(ImportExportModelAdmin, BaseAdmin):
 class UserAdmin(ImportExportModelAdmin, BaseAdmin):
     form = CustomUserForm
     resource_classes = [UserResource]
-    list_display = tuple(f.name for f in User._meta.fields if f.name not in (
-        'password', 'is_staff', 'is_superuser', 'id'
-    ))
+    list_display = tuple(f.name for f in User._meta.fields if f.name not in ('password', 'is_staff', 'is_superuser', 'id'))
     search_fields = ('username', 'email', 'phone')
     list_filter = ('role', 'auth_status', 'is_active')
     readonly_fields = ('last_login', 'date_joined')

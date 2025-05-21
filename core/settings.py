@@ -108,7 +108,7 @@ ASGI_APPLICATION = "core.asgi.application" # noqa
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "medica",
+        "NAME": "medica2",
         "USER": "postgres",
         "PASSWORD": "admin",
         "HOST": "127.0.0.1",

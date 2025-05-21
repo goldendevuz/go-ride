@@ -5,7 +5,7 @@ from ...shared.models import BaseModel
 User = get_user_model()
 
 class SecuritySetting(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='security_settings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='security_settings')
     remember_me = models.BooleanField(default=False)
     face_id = models.BooleanField(default=False)
     biometric_id = models.BooleanField(default=False)
