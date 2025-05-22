@@ -11,6 +11,8 @@ class Favorite(BaseModel):
 
     class Meta:
         unique_together = ('user', 'doctor')
+        verbose_name = "Favorite"
+        verbose_name_plural = "Favorites"
 
     def __str__(self):
         return f"{self.user} ❤️ {self.doctor}"

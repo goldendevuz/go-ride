@@ -1,7 +1,8 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from apps.v1.shared.models import BaseModel
-
 
 class Notification(BaseModel):
     class State(models.TextChoices):
@@ -12,6 +13,11 @@ class Notification(BaseModel):
     description = models.TextField()
     send_at = models.DateTimeField()
     state = models.CharField(max_length=20, choices=State.choices, default=State.NEW)
+
+    def clean(self):
+        super().clean()
+        if self.send_at < timezone.now():
+            raise ValidationError({'send_at': 'Send date/time must be in the future.'})
 
     def __str__(self):
         return f"{self.title} ({self.state})"

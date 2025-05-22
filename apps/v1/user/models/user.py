@@ -63,19 +63,18 @@ class User(AbstractUser, BaseModel):
 
     def check_username(self):
         if not self.username:
-            temp_username = f'user-{uuid.uuid4().__str__().split("-")[-1]}' # instagram-23324fsdf
-            while User.objects.filter(username=temp_username):
+            temp_username = f'user-{uuid.uuid4().__str__().split("-")[-1]}'
+            while User.objects.filter(username=temp_username).exists():
                 temp_username = f"{temp_username}{random.randint(0,9)}"
             self.username = temp_username
 
     def check_email(self):
         if self.email:
-            normalize_email = self.email.lower()  # aKhamdjon@gmail.com -> akhamdjon@gmail.com
-            self.email = normalize_email
+            self.email = self.email.lower()
 
     def check_pass(self):
         if not self.password:
-            temp_password = f'password-{uuid.uuid4().__str__().split("-")[-1]}' #  123456mfdsjfkd
+            temp_password = f'password-{uuid.uuid4().__str__().split("-")[-1]}'
             self.password = temp_password
 
     def hashing_password(self):

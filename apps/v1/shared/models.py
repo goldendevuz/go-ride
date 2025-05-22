@@ -1,6 +1,5 @@
 from django.db import models
 import uuid
-
 from django_extensions.db.models import TimeStampedModel
 
 class BaseModel(TimeStampedModel):

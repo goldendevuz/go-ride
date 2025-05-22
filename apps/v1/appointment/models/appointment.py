@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from datetime import datetime
 
 from .reason import Reason
 from apps.v1.clinic.models import Service
@@ -29,12 +30,16 @@ class Appointment(BaseModel):
     problem = models.TextField(blank=True)
     reason = models.ForeignKey(Reason, on_delete=models.SET_NULL, null=True, related_name='appointments')
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
-    appointment_time = models.DateTimeField()
+
+    @property
+    def appointment_time(self):
+        return datetime.combine(self.date, self.time)
 
     def clean(self):
         super().clean()
-        if self.appointment_time < timezone.now():
-            raise ValidationError({'appointment_time': 'Appointment time cannot be in the past.'})
+        combined_datetime = self.appointment_time
+        if combined_datetime < timezone.now():
+            raise ValidationError({'date': 'Appointment date and time cannot be in the past.'})
 
     def __str__(self):
-        return f"{self.full_name} with Dr. {self.doctor.user.get_full_name()} on {self.date}"
+        return f"{self.full_name} with Dr. {self.doctor.user.get_full_name()} on {self.date} at {self.time}"

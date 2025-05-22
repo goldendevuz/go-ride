@@ -1,5 +1,4 @@
 from django.db import models
-
 from apps.v1.shared.models import BaseModel
 
 class Specialty(BaseModel):

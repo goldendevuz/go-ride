@@ -10,5 +10,9 @@ class SecuritySetting(BaseModel):
     face_id = models.BooleanField(default=False)
     biometric_id = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = "Security Setting"
+        verbose_name_plural = "Security Settings"
+
     def __str__(self):
         return f"Security Settings for {self.user}"

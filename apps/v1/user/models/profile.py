@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.db import models
 from apps.v1.shared.models import BaseModel
 from . import User
@@ -15,3 +17,7 @@ class Profile(BaseModel):
 
     def __str__(self):
         return str(self.user)
+
+    def clean(self):
+        if self.birth_date and self.birth_date > timezone.now().date():
+            raise ValidationError({'birth_date': "Birth date cannot be in the future."})
