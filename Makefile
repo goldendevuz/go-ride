@@ -47,3 +47,9 @@ tunnel:
 	jprq http 7 -s platform
 open-bash:
 	docker exec -it drf_api bash
+backup-sqlite:
+	mkdir -p backups
+	cp db.sqlite3 backups/db_backup_$$(date +"%Y%m%d_%H%M%S").sqlite3
+backup-postgres:
+	@mkdir -p backups
+	@bash -c 'pg_dump -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -d $(DB_NAME) > backups/db_backup_$$(date +"%Y%m%d_%H%M%S").sql'
