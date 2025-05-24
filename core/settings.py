@@ -1,7 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
 
-from config import (SECRET_KEY, DEBUG, ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, CORS_ALLOWED_ORIGINS,
+from .config import (SECRET_KEY, DEBUG, ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, CORS_ALLOWED_ORIGINS,
                          EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
