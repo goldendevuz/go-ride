@@ -42,7 +42,9 @@ THIRD_APPS = {
     'debug_toolbar',
     'import_export',
     'django_extensions',
-    "drf_standardized_errors",
+    'drf_standardized_errors',
+    'crispy_forms',
+    'crispy_bootstrap5',
 }
 
 LOCAL_APPS = [
@@ -163,9 +165,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
-    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler"
+    'EXCEPTION_HANDLER': 'drf_standardized_errors.handler.exception_handler',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 SIMPLE_JWT = {
@@ -248,3 +250,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
 
 DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

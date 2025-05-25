@@ -72,7 +72,6 @@ class VerifyAPIView(APIView):
             user.save()
         return True
 
-
 class GetNewVerification(APIView):
     permission_classes = [IsAuthenticated, ]
 

@@ -21,3 +21,4 @@ pytest
 pytest-factoryboy
 drf-standardized-errors
 psycopg
+django-filter
