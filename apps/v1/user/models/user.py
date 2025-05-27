@@ -52,7 +52,9 @@ class User(AbstractUser, BaseModel):
         return " ".join([self.first_name, self.last_name])
 
     def create_verify_code(self, verify_type, verify_value=None):
-        code = "".join([str(random.randint(0, 10000) % 10) for _ in range(4)])
+        first_digit = str(random.randint(1, 9))
+        other_digits = "".join([str(random.randint(0, 9)) for _ in range(3)])
+        code = first_digit + other_digits
         UserConfirmation.objects.create(
             user_id=self.id,
             verify_type=verify_type,

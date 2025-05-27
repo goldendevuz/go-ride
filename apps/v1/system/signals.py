@@ -16,13 +16,14 @@ def create_notification_settings(sender, instance, created, **kwargs):
 @receiver(pre_save, sender=Payment)
 def validate_payment_status(sender, instance, **kwargs):
     if instance.pk:
-        prev = Payment.objects.get(pk=instance.pk)
-        if prev.status != instance.status:
+        try:
+            prev = Payment.objects.get(pk=instance.pk)
+        except Payment.DoesNotExist:
+            prev = None
+        if prev and prev.status != instance.status:
             print(f"Payment {instance.id} status changed from {prev.status} to {instance.status}")
-
-            # Auto-fill reviewed_by and reviewed_at if going to PAID or REFUNDED
             if instance.status in [Payment.Status.PAID, Payment.Status.REFUNDED]:
                 if not instance.reviewed_by:
-                    instance.reviewed_by = instance.user  # fallback
+                    instance.reviewed_by = instance.user
                 if not instance.reviewed_at:
                     instance.reviewed_at = now()

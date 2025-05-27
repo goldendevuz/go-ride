@@ -11,6 +11,5 @@ def create_related_user_data(sender, instance, created, **kwargs):
     if created:
         # Profile yaratish
         Profile.objects.get_or_create(user=instance)
-
         # Confirmation yaratish
-        UserConfirmation.objects.get_or_create(user=instance)
+        # UserConfirmation.objects.get_or_create(user=instance)

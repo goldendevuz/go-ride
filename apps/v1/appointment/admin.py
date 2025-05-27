@@ -31,7 +31,6 @@ class AppointmentAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Appointment._meta.fields if f.name not in ('id',))
     list_filter = ('status', 'doctor', 'date')
     search_fields = ('doctor__owner__username', 'patient__username', 'status')
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-date',)
 
 @admin.register(Rate)
@@ -40,7 +39,6 @@ class RateAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Rate._meta.fields if f.name not in ('id',))
     list_filter = ()
     search_fields = ('appointment__doctor__owner__username', 'appointment__patient__username')
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
 
 @admin.register(Reason)
@@ -49,7 +47,6 @@ class ReasonAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Reason._meta.fields if f.name not in ('id',))
     list_filter = ()
     search_fields = ('description',)
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
 
 @admin.register(Review)
@@ -58,7 +55,6 @@ class ReviewAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Review._meta.fields if f.name not in ('id',))
     list_filter = ('appointment', 'rating')
     search_fields = ('appointment__doctor__owner__username', 'appointment__patient__username', 'comment')
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
 
 @admin.register(ReviewLike)
@@ -67,5 +63,4 @@ class ReviewLikeAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in ReviewLike._meta.fields if f.name not in ('id',))
     list_filter = ('review', 'user')
     search_fields = ('review__comment', 'user__username')
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)

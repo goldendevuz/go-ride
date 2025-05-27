@@ -24,9 +24,8 @@ class Payment(BaseModel):
 
     def clean(self):
         super().clean()
-        if self.amount <= 0:
+        if self.amount is not None and self.amount <= 0:
             raise ValidationError({'amount': 'Amount must be a positive number.'})
-
         if self.reviewed_at and not self.reviewed_by:
             raise ValidationError({'reviewed_by': 'Reviewer must be set if reviewed_at is set.'})
         if self.reviewed_by and not self.reviewed_at:

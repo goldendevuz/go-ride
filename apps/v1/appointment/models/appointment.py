@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import datetime
 
+from django.utils.timezone import make_aware
+
 from .reason import Reason
 from apps.v1.clinic.models import Service
 from apps.v1.doctor.models import Doctor
@@ -33,13 +35,20 @@ class Appointment(BaseModel):
 
     @property
     def appointment_time(self):
-        return datetime.combine(self.date, self.time)
+        if self.date and self.time:
+            return datetime.combine(self.date, self.time)
+        return None
 
     def clean(self):
         super().clean()
-        combined_datetime = self.appointment_time
-        if combined_datetime < timezone.now():
-            raise ValidationError({'date': 'Appointment date and time cannot be in the past.'})
+        if self.date and self.time:
+            combined_datetime = datetime.combine(self.date, self.time)
 
+            # Convert to timezone-aware datetime if it's naive
+            if timezone.is_naive(combined_datetime):
+                combined_datetime = make_aware(combined_datetime)
+
+            if combined_datetime < timezone.now():
+                raise ValidationError({'date': 'Appointment date and time cannot be in the past.'})
     def __str__(self):
         return f"{self.full_name} with Dr. {self.doctor.user.get_full_name()} on {self.date} at {self.time}"

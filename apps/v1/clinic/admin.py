@@ -31,7 +31,6 @@ class BannerAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Banner._meta.fields if f.name not in ('id',))
     list_filter = ('is_active',)
     search_fields = ('title',)
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('title',)
 
 @admin.register(ContactUs)
@@ -40,7 +39,6 @@ class ContactUsAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in ContactUs._meta.fields if f.name not in ('id',))
     list_filter = ()
     search_fields = ('email', 'subject')
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
 
 @admin.register(Hospital)
@@ -49,7 +47,6 @@ class HospitalAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Hospital._meta.fields if f.name not in ('id',))
     list_filter = ()
     search_fields = ('name', 'address')
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('name',)
 
 @admin.register(Service)
@@ -58,7 +55,6 @@ class ServiceAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Service._meta.fields if f.name not in ('id',))
     list_filter = ('is_active',)
     search_fields = ('name',)
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('title',)
 
 @admin.register(Specialty)
@@ -67,5 +63,4 @@ class SpecialtyAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Specialty._meta.fields if f.name not in ('id',))
     list_filter = ()
     search_fields = ('name',)
-    readonly_fields = ('created_at', 'updated_at')
     ordering = ('name',)

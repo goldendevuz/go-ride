@@ -1,16 +1,16 @@
+from django.db.models import Q
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import FileExtensionValidator
+from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken, TokenError
+from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
 
 from apps.v1.shared.utility import check_username_phone_email, send_email, send_phone_code, check_user_type
-from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE
-from django.db.models import Q
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
+from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation
 
 class SignUpSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
@@ -89,7 +89,6 @@ class SignUpSerializer(serializers.ModelSerializer):
 
         return data
 
-
 class ChangeUserInformation(serializers.Serializer):
     first_name = serializers.CharField(write_only=True, required=True)
     last_name = serializers.CharField(write_only=True, required=True)
@@ -140,7 +139,6 @@ class ChangeUserInformation(serializers.Serializer):
         instance.save()
         return instance
 
-
 class ChangeUserPhotoSerializer(serializers.Serializer):
     photo = serializers.ImageField(validators=[FileExtensionValidator(allowed_extensions=[
         'jpg', 'jpeg', 'png', 'heic', 'heif'
@@ -153,7 +151,6 @@ class ChangeUserPhotoSerializer(serializers.Serializer):
             instance.auth_status = PHOTO_DONE
             instance.save()
         return instance
-
 
 class LoginSerializer(TokenObtainPairSerializer):
 
@@ -223,13 +220,9 @@ class LoginSerializer(TokenObtainPairSerializer):
             )
 
         if users.count() > 1:
-            # Handle duplicate credentials: Decide how to handle multiple user
-            # For example, raising an error or selecting the user with a more specific status
-            # Here, I'm using a more specific filter to handle duplicates
-            users = users.filter(auth_status=PHOTO_DONE)  # Adjust this logic based on your needs
+            users = users.filter(auth_status=PHOTO_DONE)
 
             if users.count() > 1:
-                # Still multiple user after filtering, raise an error or handle as needed
                 raise ValidationError(
                     {
                         'message': "Duplicate user accounts found"
@@ -238,37 +231,21 @@ class LoginSerializer(TokenObtainPairSerializer):
 
         return users.first()
 
-
-class LoginRefreshSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
-
+class LoginRefreshSerializer(TokenRefreshSerializer):
     def validate(self, attrs):
-        # Get access token from the authenticated request context
-        request = self.context.get('request')
-        if not request or not hasattr(request, 'auth'):
-            raise serializers.ValidationError("Access token missing from request.")
+        try:
+            refresh = RefreshToken(attrs['refresh'])
+        except TokenError:
+            raise ValidationError({'refresh': 'Token noto‘g‘ri yoki muddati tugagan'})
 
-        access_token = request.auth  # This should be a JWT token string
-        access_token_instance = AccessToken(access_token)
-
-        user_id = access_token_instance.get('user_id')
-        user = get_object_or_404(User, id=user_id)
-        update_last_login(None, user)
-
-        # Validate and rotate refresh token
-        refresh_token = attrs['refresh']
-        refresh = RefreshToken(refresh_token)
         data = {
-            'access_token': str(refresh.access_token),
+            'access': str(refresh.access_token),
             'refresh': str(refresh),
         }
-
         return data
-
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
-
 
 class ResetPasswordSerializer(serializers.Serializer):
     username_phone_email = serializers.CharField(write_only=True, required=True)
@@ -286,3 +263,39 @@ class ResetPasswordSerializer(serializers.Serializer):
             raise NotFound(detail="User not found")
         attrs['user'] = user.first()
         return attrs
+
+class ForgetPasswordSerializer(serializers.Serializer):
+    verify_type = serializers.ChoiceField(choices=['via_email', 'via_phone'])
+    verify_value = serializers.CharField()
+
+    def validate(self, attrs):
+        verify_type = attrs.get('verify_type')
+        verify_value = attrs.get('verify_value')
+
+        # verify_type ga qarab, qayerdan izlash kerakligini aniqlaymiz
+        if verify_type == 'via_email':
+            user = User.objects.filter(email__iexact=verify_value).first()
+        else:  # via_phone
+            user = User.objects.filter(phone=verify_value).first()
+
+        if not user:
+            raise serializers.ValidationError("Bunday foydalanuvchi topilmadi.")
+        attrs['user'] = user
+        return attrs
+
+    def create(self, validated_data):
+        user = validated_data['user']
+        verify_type = validated_data['verify_type']
+        verify_value = validated_data['verify_value']
+
+        # Eski, tasdiqlanmagan kodlarni o'chirish (ixtiyoriy)
+        UserConfirmation.objects.filter(
+            user=user,
+            verify_type=verify_type,
+            is_confirmed=False
+        ).delete()
+
+        code = user.create_verify_code(verify_type, verify_value)
+        # Bu yerda kodni yuborish uchun email yoki sms jo'natish funksiyasini chaqirishingiz mumkin
+
+        return {'message': 'Tasdiqlash kodi yuborildi.', 'code': code if True else 'hidden'}
