@@ -35,7 +35,7 @@ class User(AbstractUser, BaseModel):
         (PHOTO_DONE, PHOTO_DONE)
     )
     objects = UserManager()
-    role = models.CharField(max_length=31, choices=ROLE, default=PATIENT)
+    role = models.CharField(max_length=31, choices=ROLE)
     auth_type = models.CharField(max_length=31, choices=AUTH_TYPE_CHOICES)
     auth_status = models.CharField(max_length=31, choices=AUTH_STATUS, default=NEW)
     email = models.EmailField(null=True, blank=True)

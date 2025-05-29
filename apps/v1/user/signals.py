@@ -13,3 +13,8 @@ def create_related_user_data(sender, instance, created, **kwargs):
         Profile.objects.get_or_create(user=instance)
         # Confirmation yaratish
         # UserConfirmation.objects.get_or_create(user=instance)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created and not hasattr(instance, 'profile'):
+        Profile.objects.create(user=instance)

@@ -7,7 +7,7 @@ User = get_user_model()
 class ReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reason
-        fields = ['id', 'reschedule', 'cancel', 'other']
+        fields = '__all__'
 
 class AppointmentSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -30,7 +30,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ['id', 'user', 'appointment', 'text', 'rating', 'recommend', 'created_at', 'updated_at']
+        fields = '__all__'
 
     def validate_text(self, value):
         if len(value) < 10:
@@ -45,7 +45,7 @@ class RateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rate
-        fields = ['id', 'user', 'review', 'value']
+        fields = '__all__'
 
 class ReviewLikeSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -53,7 +53,7 @@ class ReviewLikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReviewLike
-        fields = ['id', 'user', 'review']
+        fields = '__all__'
 
     def validate(self, data):
         user = data.get('user')

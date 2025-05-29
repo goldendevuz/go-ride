@@ -2,33 +2,38 @@ from rest_framework import serializers
 from apps.v1.doctor.models import Doctor, Favorite, History, SecuritySetting, WorkingHour
 
 class DoctorSerializer(serializers.ModelSerializer):
+    # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Doctor
-        fields = ['id', 'user', 'specialty', 'hospital', 'rating', 'review_count', 'about']
-        read_only_fields = ['id', 'rating', 'review_count']
+        fields = '__all__'
+        read_only_fields = ['id', 'user']
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
 
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = ['id', 'user', 'doctor']
+        fields = '__all__'
         read_only_fields = ['id']
 
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = ['id', 'doctor', 'action', 'timestamp']
+        fields = '__all__'
         read_only_fields = ['id', 'timestamp']
 
 class SecuritySettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SecuritySetting
-        fields = ['id', 'user', 'remember_me', 'face_id', 'biometric_id']
+        fields = '__all__'
         read_only_fields = ['id']
 
 class WorkingHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkingHour
-        fields = ['id', 'doctor', 'day_of_week', 'start_time', 'end_time']
+        fields = '__all__'
         read_only_fields = ['id']
 
     def validate(self, data):

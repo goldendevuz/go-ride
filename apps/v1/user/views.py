@@ -1,7 +1,7 @@
 import random
 import string
 from django.utils.timezone import datetime
-from rest_framework import permissions, status
+from rest_framework import permissions, status, generics
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.generics import CreateAPIView, UpdateAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -15,8 +15,9 @@ from rest_framework.decorators import api_view
 from apps.v1.shared.utils.response import success_response
 from apps.v1.shared.utility import send_email, check_username_phone_email, send_phone_code
 from .serializers import SignUpSerializer, ChangeUserInformation, ChangeUserPhotoSerializer, LoginSerializer, \
-    LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer, ForgetPasswordSerializer
-from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation
+    LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer, ForgetPasswordSerializer, ProfileSerializer
+from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation, Profile
+
 
 class CreateUserView(CreateAPIView):
     queryset = User.objects.all()
@@ -226,3 +227,13 @@ class PasswordGeneratorView(APIView):
 @api_view(['GET'])
 def test_login(request):
     return Response({"message": "Hello, world!"})
+
+class ProfileDetailUpdateView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        try:
+            return self.request.user.profile
+        except Profile.DoesNotExist:
+            raise ValidationError({'detail': 'Profile topilmadi'})

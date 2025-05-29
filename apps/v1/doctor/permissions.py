@@ -9,7 +9,7 @@ class IsOwnerOrAdmin(permissions.BasePermission):
         if request.user.is_staff or request.user.is_superuser:
             return True
         # Obyekt egasi
-        return hasattr(obj, 'user') and obj.user == request.user
+        return hasattr(obj, 'user') and obj.user == request.user or request.user.is_staff
 
 class IsDoctorOrAdmin(permissions.BasePermission):
     """
