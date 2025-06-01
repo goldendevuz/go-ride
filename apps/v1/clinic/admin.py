@@ -39,7 +39,6 @@ class ContactUsAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in ContactUs._meta.fields if f.name not in ('id',))
     list_filter = ()
     search_fields = ('email', 'subject')
-    ordering = ('-created_at',)
 
 @admin.register(Hospital)
 class HospitalAdmin(ImportExportModelAdmin, BaseAdmin):

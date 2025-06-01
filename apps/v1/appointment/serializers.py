@@ -10,19 +10,9 @@ class ReasonSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    doctor = serializers.PrimaryKeyRelatedField(read_only=True)  # Doctor creation is not in this serializer
-    status = serializers.ChoiceField(choices=Appointment.Status.choices, default=Appointment.Status.PENDING)
-    service = serializers.PrimaryKeyRelatedField(read_only=True, allow_null=True)
-
     class Meta:
         model = Appointment
         fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Dynamically set service queryset to active services only
-        self.fields['service'].queryset = self.Meta.model._meta.get_field('service').related_model.objects.filter(is_active=True)
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

@@ -37,8 +37,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['user', 'appointment', 'rating', 'recommend']
     search_fields = ['text']
-    ordering_fields = ['created_at', 'rating']
-    ordering = ['-created_at']
+    ordering_fields = ['created', 'rating']
 
 class RateViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()

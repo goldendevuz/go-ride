@@ -31,7 +31,6 @@ class DoctorAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Doctor._meta.fields if f.name not in ('id',))
     list_filter = ('specialty',)
     search_fields = ('owner__username', 'owner__email', 'specialty__name')
-    ordering = ('-created_at',)
 
 @admin.register(Favorite)
 class FavoriteAdmin(ImportExportModelAdmin, BaseAdmin):
@@ -39,7 +38,6 @@ class FavoriteAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in Favorite._meta.fields if f.name not in ('id',))
     list_filter = ('doctor', 'user')
     search_fields = ('user__username', 'doctor__owner__username')
-    ordering = ('-created_at',)
 
 @admin.register(History)
 class HistoryAdmin(ImportExportModelAdmin, BaseAdmin):
@@ -47,7 +45,6 @@ class HistoryAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in History._meta.fields if f.name not in ('id',))
     list_filter = ('doctor', 'action')
     search_fields = ('doctor__owner__username', 'action')
-    ordering = ('-created_at',)
 
 @admin.register(SecuritySetting)
 class SecuritySettingAdmin(ImportExportModelAdmin, BaseAdmin):
@@ -55,7 +52,6 @@ class SecuritySettingAdmin(ImportExportModelAdmin, BaseAdmin):
     list_display = tuple(f.name for f in SecuritySetting._meta.fields if f.name not in ('id',))
     list_filter = ('user',)
     search_fields = ('user__username',)
-    ordering = ('-created_at',)
 
 @admin.register(WorkingHour)
 class WorkingHourAdmin(ImportExportModelAdmin, BaseAdmin):

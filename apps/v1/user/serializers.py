@@ -11,7 +11,7 @@ from apps.v1.shared.utility import check_username_phone_email, send_email, send_
 from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation, Profile
 
 class SignUpSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
+    # id = serializers.UUIDField(read_only=True)
     username_phone_email = serializers.CharField(required=True, write_only=True)
 
     class Meta:

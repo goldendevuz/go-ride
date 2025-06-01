@@ -9,5 +9,5 @@ router.register(r'notification-settings', NotificationSettingViewSet, basename='
 router.register(r'payments', PaymentViewSet, basename='payment')
 
 urlpatterns = [
-    path('system/', include(router.urls)),
+    path('', include(router.urls)),
 ]

@@ -9,7 +9,6 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'updated_at']
 
 class NotificationSettingSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)  # faqat o'qish uchun
@@ -17,7 +16,6 @@ class NotificationSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSetting
         fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user']
 
 class PaymentSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)  # faqat o'qish uchun
@@ -26,7 +24,6 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'reviewed_by']
 
     def create(self, validated_data):
         request = self.context.get('request')
