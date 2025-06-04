@@ -11,7 +11,6 @@ from apps.v1.shared.utility import check_username_phone_email, send_email, send_
 from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation, Profile
 
 class SignUpSerializer(serializers.ModelSerializer):
-    # id = serializers.UUIDField(read_only=True)
     username_phone_email = serializers.CharField(required=True, write_only=True)
 
     class Meta:
@@ -23,19 +22,27 @@ class SignUpSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        verify_value = validated_data.pop('verify_value', None)
-        auth_type = validated_data.get('auth_type')
+        verify_value = validated_data.pop("verify_value", None)
+        auth_type = validated_data.pop("auth_type", None)
+        password = validated_data.pop("password", None)
 
-        user = User.objects.create(auth_type=auth_type)  # don't set email or phone yet
+        # Email/phone ajratilgan bo‘lsa, tozalaymiz
+        validated_data.pop("username_phone_email", None)
 
+        # user create
+        user = User(auth_type=auth_type, **validated_data)
+        if password:
+            user.set_password(password)
+        user.save()
+
+        # verify code yaratish va yuborish
         code = user.create_verify_code(auth_type, verify_value=verify_value)
-
         if auth_type == VIA_EMAIL:
             send_email(verify_value, code)
         elif auth_type == VIA_PHONE:
             if False in send_phone_code(verify_value, code).values():
                 raise ValidationError({
-                    "message": "Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring, yoki admin bilan bog'laning"
+                    "message": "Xatolik yuz berdi. Iltimos qaytadan urinib ko‘ring, yoki admin bilan bog‘laning"
                 })
 
         return user

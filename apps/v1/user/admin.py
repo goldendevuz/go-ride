@@ -21,7 +21,7 @@ class ProfileResource(resources.ModelResource):
 class CustomUserForm(forms.ModelForm):
     class Meta:
         model = User
-        exclude = ('password',)
+        exclude = ()
 
 @admin.register(Profile)
 class ProfileAdmin(ImportExportModelAdmin, BaseAdmin):
