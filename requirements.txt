@@ -24,3 +24,4 @@ psycopg
 django-filter
 django-ulid
 django-redis
+django-ratelimit

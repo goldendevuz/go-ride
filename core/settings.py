@@ -169,6 +169,14 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'drf_standardized_errors.handler.exception_handler',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '10000/day',
+        'anon': '1000/hour',
+    }
 }
 
 SIMPLE_JWT = {
@@ -235,8 +243,6 @@ STORAGES = {
 
 # Use compressed static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-APPEND_SLASH=True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
