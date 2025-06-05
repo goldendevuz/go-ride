@@ -16,7 +16,7 @@ class Notification(BaseModel):
 
     def clean(self):
         super().clean()
-        if self.send_at < timezone.now():
+        if self.send_at is not None and self.send_at < timezone.now():
             raise ValidationError({'send_at': 'Send date/time must be in the future.'})
 
     def __str__(self):

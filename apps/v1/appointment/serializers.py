@@ -1,3 +1,5 @@
+from datetime import datetime
+from django.utils import timezone
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Appointment, Reason, Review, Rate, ReviewLike
@@ -13,6 +15,22 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = '__all__'
+
+    def validate(self, attrs):
+        date = attrs.get('date')
+        time = attrs.get('time')
+
+        if date and time:
+            appointment_datetime = datetime.combine(date, time)
+
+            # Naive datetime ni timezone-aware ga aylantiramiz
+            if timezone.is_naive(appointment_datetime):
+                appointment_datetime = timezone.make_aware(appointment_datetime)
+
+            if appointment_datetime < timezone.now():
+                raise serializers.ValidationError("Appointment date and time cannot be in the past.")
+
+        return attrs
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

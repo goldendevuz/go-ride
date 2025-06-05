@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from apps.v1.system.models import (
     Notification,
@@ -9,6 +10,14 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
+
+    def validate_send_at(self, value):
+        if timezone.is_naive(value):
+            value = timezone.make_aware(value)
+
+        if value < timezone.now():
+            raise serializers.ValidationError("Send date/time must be in the future.")
+        return value
 
 class NotificationSettingSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)  # faqat o'qish uchun
