@@ -15,7 +15,9 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = list(
+            f.name for f in User._meta.fields if f.name not in ('password', 'is_staff', 'is_superuser'))
+        fields += ('username_phone_email',)
         extra_kwargs = {
             'auth_type': {'read_only': True, 'required': False},
             'auth_status': {'read_only': True, 'required': False},

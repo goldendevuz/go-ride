@@ -20,6 +20,9 @@ class DoctorViewSet(viewsets.ModelViewSet):
     ordering_fields = ['rating', 'review_count']
     ordering = ['-rating']
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
@@ -32,6 +35,9 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         if user.is_staff:
             return Favorite.objects.all()
         return Favorite.objects.filter(user=user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class HistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = History.objects.all()
@@ -52,6 +58,9 @@ class SecuritySettingViewSet(viewsets.ModelViewSet):
         if user.is_staff:
             return SecuritySetting.objects.all()
         return SecuritySetting.objects.filter(user=user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class WorkingHourViewSet(viewsets.ModelViewSet):
     queryset = WorkingHour.objects.all()

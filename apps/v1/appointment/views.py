@@ -25,6 +25,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         # Oddiy foydalanuvchi yoki shifokor faqat o‘z appointmentlarini ko‘radi
         return Appointment.objects.filter(Q(user=user) | Q(doctor__user=user)).distinct()
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 class ReasonViewSet(viewsets.ModelViewSet):
     queryset = Reason.objects.all()
     serializer_class = ReasonSerializer
@@ -39,12 +42,21 @@ class ReviewViewSet(viewsets.ModelViewSet):
     search_fields = ['text']
     ordering_fields = ['created', 'rating']
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 class RateViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 class ReviewLikeViewSet(viewsets.ModelViewSet):
     queryset = ReviewLike.objects.all()
     serializer_class = ReviewLikeSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

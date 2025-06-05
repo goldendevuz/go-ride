@@ -14,40 +14,30 @@ class DoctorSerializer(serializers.ModelSerializer):
         required=True,
         allow_null=False
     )
-    about = serializers.CharField(required=True, allow_blank=False)
 
     class Meta:
         model = Doctor
-        fields = '__all__'
-        read_only_fields = ['id', 'user']
-
-    def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
+        exclude = ['user']
 
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = '__all__'
-        read_only_fields = ['id']
+        exclude = ['user']
 
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = History
         fields = '__all__'
-        read_only_fields = ['id', 'timestamp']
 
 class SecuritySettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SecuritySetting
-        fields = '__all__'
-        read_only_fields = ['id']
+        exclude = ['user']
 
 class WorkingHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkingHour
         fields = '__all__'
-        read_only_fields = ['id']
 
     def validate(self, data):
         start = data.get('start_time')

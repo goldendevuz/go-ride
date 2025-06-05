@@ -14,7 +14,7 @@ class ReasonSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = '__all__'
+        exclude = ['user']
 
     def validate(self, attrs):
         date = attrs.get('date')
@@ -33,12 +33,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return attrs
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     appointment = serializers.PrimaryKeyRelatedField(queryset=Appointment.objects.all())
 
     class Meta:
         model = Review
-        fields = '__all__'
+        exclude = ['user']
 
     def validate_text(self, value):
         if len(value) < 10:
@@ -48,20 +47,18 @@ class ReviewSerializer(serializers.ModelSerializer):
         return value
 
 class RateSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     review = serializers.PrimaryKeyRelatedField(queryset=Review.objects.all())
 
     class Meta:
         model = Rate
-        fields = '__all__'
+        exclude = ['user']
 
 class ReviewLikeSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     review = serializers.PrimaryKeyRelatedField(queryset=Review.objects.all())
 
     class Meta:
         model = ReviewLike
-        fields = '__all__'
+        exclude = ['user']
 
     def validate(self, data):
         user = data.get('user')
