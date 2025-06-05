@@ -31,7 +31,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 class ReasonViewSet(viewsets.ModelViewSet):
     queryset = Reason.objects.all()
     serializer_class = ReasonSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
