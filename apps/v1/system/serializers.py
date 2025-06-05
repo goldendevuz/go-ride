@@ -16,7 +16,7 @@ class NotificationSerializer(serializers.ModelSerializer):
             value = timezone.make_aware(value)
 
         if value < timezone.now():
-            raise serializers.ValidationError("Send date/time must be in the future.")
+            raise serializers.ValidationError("Notification date and time cannot be in the past.")
         return value
 
 class NotificationSettingSerializer(serializers.ModelSerializer):
