@@ -4,6 +4,8 @@ from django.utils.timezone import now
 
 from apps.v1.system.models import NotificationSetting, Payment
 from django.contrib.auth import get_user_model
+from apps.v1.system.models import Notification
+from apps.v1.system.tasks import send_notification
 
 User = get_user_model()
 
@@ -27,3 +29,14 @@ def validate_payment_status(sender, instance, **kwargs):
                     instance.reviewed_by = instance.user
                 if not instance.reviewed_at:
                     instance.reviewed_at = now()
+
+@receiver(post_save, sender=Notification)
+def schedule_notification_task(sender, instance, created, **kwargs):
+    if created:
+        eta = instance.send_at
+        if eta > now():
+            # Taskni rejalashtirilgan vaqtda ishlatish
+            send_notification.apply_async((instance.id,), eta=eta)
+        else:
+            # Vaqt o'tib ketgan bo'lsa, hozir ishlasin
+            send_notification.delay(instance.id)

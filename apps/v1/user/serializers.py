@@ -9,6 +9,7 @@ from rest_framework.exceptions import ValidationError, PermissionDenied, NotFoun
 
 from apps.v1.shared.utility import check_username_phone_email, send_email, send_phone_code, check_user_type
 from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation, Profile
+from apps.v1.user.tasks import process_user_photo
 
 class SignUpSerializer(serializers.ModelSerializer):
     username_phone_email = serializers.CharField(required=True, write_only=True)
@@ -152,6 +153,10 @@ class ChangeUserPhotoSerializer(serializers.Serializer):
             instance.photo = photo
             instance.auth_status = PHOTO_DONE
             instance.save()
+
+            # ✅ Celery taskni chaqiramiz
+            process_user_photo.delay(instance.id)
+
         return instance
 
 class LoginSerializer(TokenObtainPairSerializer):

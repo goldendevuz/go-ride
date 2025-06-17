@@ -121,7 +121,7 @@ class UpdateUserInformationView(UpdateAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 class ChangeUserPhotoView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def put(self, request, *args, **kwargs):
         serializer = ChangeUserPhotoSerializer(data=request.data)
