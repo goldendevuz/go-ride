@@ -25,3 +25,4 @@ django-filter
 django-ulid
 django-redis
 django-ratelimit
+django-schema-viewer==0.5.3

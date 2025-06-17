@@ -14,6 +14,7 @@ urlpatterns = [
     path(API_V1_URL + 'appointment/', include('apps.v1.appointment.urls')),
     path(API_V1_URL + 'system/', include('apps.v1.system.urls')),
     path(API_V1_URL + 'api-auth/', include('rest_framework.urls')),
+    path('schema-viewer/', include('schema_viewer.urls')),
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

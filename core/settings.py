@@ -45,6 +45,7 @@ THIRD_APPS = {
     'drf_standardized_errors',
     'crispy_forms',
     'crispy_bootstrap5',
+    'schema_viewer',
 }
 
 LOCAL_APPS = [
