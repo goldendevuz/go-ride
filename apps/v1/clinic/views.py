@@ -1,8 +1,7 @@
 from django.core.cache import cache
-from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from .models import Hospital, Specialty, Service, Banner, ContactUs
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
@@ -12,12 +11,13 @@ from .serializers import (
     BannerSerializer,
     ContactUsSerializer,
 )
+from adrf import viewsets
 
-class HospitalViewSet(ModelViewSet):
+class HospitalViewSet(viewsets.ModelViewSet):
     queryset = Hospital.objects.all()
     serializer_class = HospitalSerializer
     permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name', 'phone']
     search_fields = ['name', 'address', 'email', 'phone']
     ordering_fields = ['name', 'created_at']
@@ -70,38 +70,38 @@ class HospitalViewSet(ModelViewSet):
         cache.delete('hospital_list')
         return response
 
-class SpecialtyViewSet(ModelViewSet):
+class SpecialtyViewSet(viewsets.ModelViewSet):
     queryset = Specialty.objects.all()
     serializer_class = SpecialtySerializer
     permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name', 'description']
     ordering_fields = ['name', 'created_at']
 
-class ServiceViewSet(ModelViewSet):
+class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
     permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['is_active']
     search_fields = ['title', 'description']
     ordering_fields = ['duration', 'created_at']
 
-class BannerViewSet(ModelViewSet):
+class BannerViewSet(viewsets.ModelViewSet):
     queryset = Banner.objects.all()
     serializer_class = BannerSerializer
     permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['is_active']
     search_fields = ['title', 'description']
     ordering_fields = ['created_at']
 
-class ContactUsViewSet(ModelViewSet):
+class ContactUsViewSet(viewsets.ModelViewSet):
     queryset = ContactUs.objects.all()
     serializer_class = ContactUsSerializer
     permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['order']
     search_fields = ['title', 'icon', 'url']
     ordering_fields = ['order']

@@ -1,9 +1,10 @@
+from adrf.serializers import ModelSerializer
 from rest_framework import serializers
 
 from apps.v1.clinic.models import Specialty, Hospital
 from apps.v1.doctor.models import Doctor, Favorite, History, SecuritySetting, WorkingHour
 
-class DoctorSerializer(serializers.ModelSerializer):
+class DoctorSerializer(ModelSerializer):
     specialty = serializers.PrimaryKeyRelatedField(
         queryset=Specialty.objects.all(),
         required=True,

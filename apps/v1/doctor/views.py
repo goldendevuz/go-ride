@@ -1,5 +1,5 @@
-from rest_framework import viewsets, permissions, filters
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, filters
+# from django_filters.rest_framework import DjangoFilterBackend
 from apps.v1.doctor.models import Doctor, Favorite, History, SecuritySetting, WorkingHour
 from apps.v1.doctor.permissions import IsOwnerOrAdmin
 from apps.v1.doctor.serializers import (
@@ -9,12 +9,13 @@ from apps.v1.doctor.serializers import (
     SecuritySettingSerializer,
     WorkingHourSerializer
 )
+from adrf import viewsets
 
 class DoctorViewSet(viewsets.ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['specialty', 'hospital']
     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'about']
     ordering_fields = ['rating', 'review_count']
@@ -27,7 +28,7 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
+    # filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user', 'doctor']
 
     def get_queryset(self):
@@ -43,7 +44,7 @@ class HistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = History.objects.all()
     serializer_class = HistorySerializer
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['doctor']
     ordering_fields = ['timestamp']
     ordering = ['-timestamp']
@@ -66,7 +67,7 @@ class WorkingHourViewSet(viewsets.ModelViewSet):
     queryset = WorkingHour.objects.all()
     serializer_class = WorkingHourSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['doctor', 'day_of_week']
     ordering_fields = ['day_of_week', 'start_time']
     ordering = ['day_of_week', 'start_time']

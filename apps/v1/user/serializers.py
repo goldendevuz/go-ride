@@ -1,3 +1,4 @@
+from adrf.serializers import ModelSerializer
 from django.db.models import Q
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
@@ -11,7 +12,7 @@ from apps.v1.shared.utility import check_username_phone_email, send_email, send_
 from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation, Profile
 from apps.v1.user.tasks import process_user_photo
 
-class SignUpSerializer(serializers.ModelSerializer):
+class SignUpSerializer(ModelSerializer):
     username_phone_email = serializers.CharField(required=True, write_only=True)
 
     class Meta:

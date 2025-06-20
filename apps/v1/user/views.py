@@ -18,7 +18,6 @@ from .serializers import SignUpSerializer, ChangeUserInformation, ChangeUserPhot
     LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer, ForgetPasswordSerializer, ProfileSerializer
 from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation, Profile
 
-
 class CreateUserView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (permissions.AllowAny, )
@@ -121,7 +120,7 @@ class UpdateUserInformationView(UpdateAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 class ChangeUserPhotoView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def put(self, request, *args, **kwargs):
         serializer = ChangeUserPhotoSerializer(data=request.data)

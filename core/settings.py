@@ -43,9 +43,8 @@ THIRD_APPS = {
     'import_export',
     'django_extensions',
     'drf_standardized_errors',
-    'crispy_forms',
-    'crispy_bootstrap5',
     'schema_viewer',
+    'adrf',
 }
 
 LOCAL_APPS = [
@@ -164,12 +163,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        # 'rest_framework.renderers.BrowsableAPIRenderer', # meterialni to'g'irlash
-    ),
     'EXCEPTION_HANDLER': 'drf_standardized_errors.handler.exception_handler',
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.UserRateThrottle',
         'rest_framework.throttling.AnonRateThrottle',
@@ -258,9 +252,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
 
 DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CACHES = {
     "default": {

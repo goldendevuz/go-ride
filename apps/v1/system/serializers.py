@@ -1,12 +1,14 @@
+from adrf.serializers import ModelSerializer
 from django.utils import timezone
 from rest_framework import serializers
+
 from apps.v1.system.models import (
     Notification,
     NotificationSetting,
     Payment,
 )
 
-class NotificationSerializer(serializers.ModelSerializer):
+class NotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'

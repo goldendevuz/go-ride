@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
+# from adrf.manager import AManager
 
 from apps.v1.shared.models import BaseModel
 from .userconfirmation import UserConfirmation
@@ -35,6 +36,8 @@ class User(AbstractUser, BaseModel):
         (PHOTO_DONE, PHOTO_DONE)
     )
     objects = UserManager()
+    # async_objects = AManager()
+
     role = models.CharField(max_length=31, choices=ROLE)
     auth_type = models.CharField(max_length=31, choices=AUTH_TYPE_CHOICES)
     auth_status = models.CharField(max_length=31, choices=AUTH_STATUS, default=NEW)

@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from adrf import serializers
 from .models import Hospital, Specialty, Service, Banner, ContactUs
 
 class HospitalSerializer(serializers.ModelSerializer):

@@ -28,3 +28,4 @@ django-ratelimit
 django-schema-viewer==0.5.3
 celery
 flower
+adrf==0.1.9

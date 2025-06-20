@@ -1,7 +1,10 @@
 from datetime import datetime
+
+from adrf.serializers import ModelSerializer
 from django.utils import timezone
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
 from .models import Appointment, Reason, Review, Rate, ReviewLike
 
 User = get_user_model()
@@ -32,7 +35,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         return attrs
 
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(ModelSerializer):
     appointment = serializers.PrimaryKeyRelatedField(queryset=Appointment.objects.all())
 
     class Meta:

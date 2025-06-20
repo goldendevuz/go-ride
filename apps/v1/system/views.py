@@ -1,15 +1,16 @@
-from rest_framework import viewsets, permissions, filters
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, filters
+# from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.v1.system.models import Notification, NotificationSetting, Payment
 from apps.v1.system.permissions import NotificationPermission, NotificationSettingPermission, PaymentPermission
 from apps.v1.system.serializers import NotificationSerializer, NotificationSettingSerializer, PaymentSerializer
+from adrf import viewsets
 
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated, NotificationPermission]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['state', 'send_at']
     search_fields = ['title', 'description']
     ordering_fields = ['send_at', 'title']
@@ -39,7 +40,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     permission_classes = [permissions.IsAuthenticated, PaymentPermission]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status', 'method', 'user']
     search_fields = ['notes', 'method']
     ordering_fields = ['amount', 'reviewed_at', 'status']
