@@ -45,6 +45,7 @@ THIRD_APPS = {
     'drf_standardized_errors',
     'schema_viewer',
     'adrf',
+    'drf_yasg',
 }
 
 LOCAL_APPS = [

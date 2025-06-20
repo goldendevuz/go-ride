@@ -29,3 +29,4 @@ django-schema-viewer==0.5.3
 celery
 flower
 adrf==0.1.9
+drf-yasg==1.21.10
