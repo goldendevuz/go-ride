@@ -1,8 +1,7 @@
-from .user import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE
-from .userconfirmation import UserConfirmation
+from .user import User
 from .profile import Profile
+from .userconfirmation import UserConfirmation
 
 __all__ = [
-    "User", "VIA_EMAIL", "VIA_PHONE", "NEW", "CODE_VERIFIED", "DONE", "PHOTO_DONE",
-    "UserConfirmation"
+    "Profile", "User", "UserConfirmation"
 ]

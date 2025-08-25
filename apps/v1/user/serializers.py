@@ -3,13 +3,14 @@ from django.db.models import Q
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import FileExtensionValidator
+from apps.v1.shared.enums import AuthStatus, AuthType
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
 
 from apps.v1.shared.utility import check_username_phone_email, send_email, send_phone_code, check_user_type
-from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation, Profile
+from .models import Profile, User, UserConfirmation
 from apps.v1.user.tasks import process_user_photo
 
 class SignUpSerializer(ModelSerializer):
@@ -41,9 +42,9 @@ class SignUpSerializer(ModelSerializer):
 
         # verify code yaratish va yuborish
         code = user.create_verify_code(auth_type, verify_value=verify_value)
-        if auth_type == VIA_EMAIL:
+        if auth_type == AuthType.VIA_EMAIL:
             send_email(verify_value, code)
-        elif auth_type == VIA_PHONE:
+        elif auth_type == AuthType.VIA_PHONE:
             if False in send_phone_code(verify_value, code).values():
                 raise ValidationError({
                     "message": "Xatolik yuz berdi. Iltimos qaytadan urinib ko‘ring, yoki admin bilan bog‘laning"
@@ -65,7 +66,7 @@ class SignUpSerializer(ModelSerializer):
                 'message': "You must send a valid email or phone number"
             })
 
-        data['auth_type'] = VIA_EMAIL if input_type == "email" else VIA_PHONE
+        data['auth_type'] = AuthType.VIA_EMAIL if input_type == "email" else AuthType.VIA_PHONE
         data['verify_value'] = user_input  # Save it for sending code, not for saving on the model
         return data
 
@@ -73,12 +74,12 @@ class SignUpSerializer(ModelSerializer):
         # return value.lower()
         value = value.lower()
         # ic(value)
-        if value and User.objects.filter(email=value, auth_status__in=[CODE_VERIFIED, DONE, PHOTO_DONE]).exists():
+        if value and User.objects.filter(email=value, auth_status__in=[AuthStatus.CODE_VERIFIED, AuthStatus.DONE, AuthStatus.DONE]).exists():
             data = {
                 "message": "Bu email allaqachon ma'lumotlar bazasida bor"
             }
             raise ValidationError(data)
-        elif value and User.objects.filter(phone=value, auth_status__in=[CODE_VERIFIED, DONE, PHOTO_DONE]).exists():
+        elif value and User.objects.filter(phone=value, auth_status__in=[AuthStatus.CODE_VERIFIED, AuthStatus.DONE, AuthStatus.DONE]).exists():
             data = {
                 "message": "Bu telefon raqami allaqachon ma'lumotlar bazasida bor"
             }
@@ -138,8 +139,8 @@ class ChangeUserInformation(serializers.Serializer):
         instance.username = validated_data.get('username', instance.username)
         if validated_data.get('password'):
             instance.set_password(validated_data.get('password'))
-        if instance.auth_status == CODE_VERIFIED:
-            instance.auth_status = DONE
+        if instance.auth_status == AuthStatus.CODE_VERIFIED:
+            instance.auth_status = AuthStatus.DONE
         instance.save()
         return instance
 
@@ -152,7 +153,7 @@ class ChangeUserPhotoSerializer(serializers.Serializer):
         photo = validated_data.get('photo')
         if photo:
             instance.photo = photo
-            instance.auth_status = PHOTO_DONE
+            instance.auth_status = AuthStatus.DONE
             instance.save()
 
             # ✅ Celery taskni chaqiramiz
@@ -191,7 +192,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         # user statusi tekshirilishi kerak
         current_user = User.objects.filter(username__iexact=username).first()  # None
 
-        if current_user is not None and current_user.auth_status in [NEW, CODE_VERIFIED]:
+        if current_user is not None and current_user.auth_status in [AuthStatus.NEW, AuthStatus.CODE_VERIFIED]:
             raise ValidationError(
                 {
                     'message': "Siz royhatdan toliq otmagansiz!"
@@ -209,7 +210,7 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def validate(self, data):
         self.auth_validate(data)
-        if self.user.auth_status not in [DONE, PHOTO_DONE]:
+        if self.user.auth_status not in [AuthStatus.DONE, AuthStatus.DONE]:
             raise PermissionDenied("Siz login qila olmaysiz. Ruxsatingiz yoq")
         data = self.user.token()
         data['auth_status'] = self.user.auth_status
@@ -228,7 +229,7 @@ class LoginSerializer(TokenObtainPairSerializer):
             )
 
         if users.count() > 1:
-            users = users.filter(auth_status=PHOTO_DONE)
+            users = users.filter(auth_status=AuthStatus.DONE)
 
             if users.count() > 1:
                 raise ValidationError(
@@ -273,7 +274,7 @@ class ResetPasswordSerializer(serializers.Serializer):
         return attrs
 
 class ForgetPasswordSerializer(serializers.Serializer):
-    verify_type = serializers.ChoiceField(choices=['via_email', 'via_phone'])
+    verify_type = serializers.ChoiceField(choices=['AuthType.via_email', 'AuthType.via_phone'])
     verify_value = serializers.CharField()
 
     def validate(self, attrs):
@@ -281,9 +282,9 @@ class ForgetPasswordSerializer(serializers.Serializer):
         verify_value = attrs.get('verify_value')
 
         # verify_type ga qarab, qayerdan izlash kerakligini aniqlaymiz
-        if verify_type == 'via_email':
+        if verify_type == 'AuthType.via_email':
             user = User.objects.filter(email__iexact=verify_value).first()
-        else:  # via_phone
+        else:  # AuthType.via_phone
             user = User.objects.filter(phone=verify_value).first()
 
         if not user:

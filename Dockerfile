@@ -38,7 +38,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-EXPOSE 4000
+EXPOSE 1026
 
 # Run the startup script
 CMD ["bash", "start.sh"]

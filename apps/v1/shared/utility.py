@@ -1,29 +1,16 @@
 import re
 import threading
-import phonenumbers
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from icecream import ic
 from rest_framework.exceptions import ValidationError
 from decouple import config
-from twilio.rest import Client
 
 email_regex = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b")
 phone_regex = re.compile(r"(\+[0-9]+\s*)?(\([0-9]+\))?[\s0-9\-]+[0-9]+")
 username_regex = re.compile(r"^[a-zA-Z0-9_.-]+$")
 
-
-# Define the phone number regex
-# phone_regex = RegexValidator(
-#     regex=r'^\+998\d{9}$',
-#     message="Telefon raqam quyidagi formatda bo'lishi kerak: '+998XXXXXXXXX' (masalan, +998901234567)."
-# )
-    # phone = phonenumbers.parse(username_phone_email)
-    # if phonenumbers.is_valid_number(phone):
-    #     username_phone_email = 'phone'
-
 def check_username_phone_email(username_phone_email):
-    # ic(username_phone_email)
     if re.fullmatch(email_regex, username_phone_email):
         return "email"
     if re.fullmatch(phone_regex, username_phone_email):
@@ -34,7 +21,6 @@ def check_username_phone_email(username_phone_email):
     raise ValidationError(data)
 
 def check_user_type(user_input):
-    # phone = phonenumbers.parse(user_input)
     if re.fullmatch(email_regex, user_input):
         user_input = 'email'
     elif re.fullmatch(phone_regex, user_input):

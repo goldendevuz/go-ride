@@ -1,6 +1,7 @@
 import random
 import string
 from django.utils.timezone import datetime
+from apps.v1.shared.enums import AuthStatus, AuthType
 from rest_framework import permissions, status, generics
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.generics import CreateAPIView, UpdateAPIView, GenericAPIView
@@ -16,7 +17,7 @@ from apps.v1.shared.utils.response import success_response
 from apps.v1.shared.utility import send_email, check_username_phone_email, send_phone_code
 from .serializers import SignUpSerializer, ChangeUserInformation, ChangeUserPhotoSerializer, LoginSerializer, \
     LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer, ForgetPasswordSerializer, ProfileSerializer
-from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation, Profile
+from .models import Profile, User, UserConfirmation
 
 class CreateUserView(CreateAPIView):
     queryset = User.objects.all()
@@ -51,11 +52,11 @@ class VerifyAPIView(APIView):
             raise ValidationError(data)
         else:
             verifies.update(is_confirmed=True)
-        if user.auth_status == NEW:
-            user.auth_status = CODE_VERIFIED
-            if usr.verify_type == VIA_PHONE:
+        if user.auth_status == AuthStatus.NEW:
+            user.auth_status = AuthStatus.CODE_VERIFIED
+            if usr.verify_type == AuthType.VIA_PHONE:
                 user.phone = usr.verify_value
-            elif usr.verify_type == VIA_EMAIL:
+            elif usr.verify_type == AuthType.VIA_EMAIL:
                 user.email = usr.verify_value
             user.save()
         return True
@@ -66,11 +67,11 @@ class GetNewVerification(APIView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         self.check_verification(user)
-        if user.auth_type == VIA_EMAIL:
-            code = user.create_verify_code(VIA_EMAIL)
+        if user.auth_type == AuthType.VIA_EMAIL:
+            code = user.create_verify_code(AuthType.VIA_EMAIL)
             send_email(user.email, code)
-        elif user.auth_type == VIA_PHONE:
-            code = user.create_verify_code(VIA_PHONE)
+        elif user.auth_type == AuthType.VIA_PHONE:
+            code = user.create_verify_code(AuthType.VIA_PHONE)
             send_phone_code(user.phone, code)
         else:
             data = {
@@ -169,10 +170,10 @@ class ResetPasswordView(APIView):
         username_phone_email = serializer.validated_data.get('username_phone_email')
         user = serializer.validated_data.get('user')
         if check_username_phone_email(username_phone_email) == 'phone':
-            code = user.create_verify_code(VIA_PHONE)
+            code = user.create_verify_code(AuthType.VIA_PHONE)
             send_email(username_phone_email, code)
         elif check_username_phone_email(username_phone_email) == 'email':
-            code = user.create_verify_code(VIA_EMAIL)
+            code = user.create_verify_code(AuthType.VIA_EMAIL)
             send_email(username_phone_email, code)
 
         return Response(

@@ -43,4 +43,4 @@ class UserAdmin(ImportExportModelAdmin, BaseAdmin):
     resource_classes = [UserResource]
     list_display = tuple(f.name for f in User._meta.fields if f.name not in ('password', 'is_staff', 'is_superuser', 'id'))
     search_fields = ('username', 'email', 'phone')
-    list_filter = ('role', 'auth_status', 'is_active')
+    list_filter = ('auth_status', 'is_active')

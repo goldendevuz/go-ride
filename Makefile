@@ -11,9 +11,9 @@ cru:
 test:
 	python3 manage.py test
 run-asgi:
-	uvicorn core.asgi:application --host 0.0.0.0 --port 4000 --reload
+	uvicorn core.asgi:application --host 0.0.0.0 --port 1026 --reload
 run:
-	python manage.py runserver 0.0.0.0:4000
+	python manage.py runserver 0.0.0.0:1026
 
 #others
 git-rm-idea:
@@ -27,7 +27,7 @@ migration:
 migrate:
 	python3 manage.py migrate
 startapp:
-	python manage.py startapp $(name) && mv $(name) apps/$(name)
+	python manage.py startapp $(name) && mv $(name) apps/v1/$(name)
 clear-linux:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete && find . -path "*/migrations/*.pyc"  -delete
 clear-windows:
@@ -40,16 +40,18 @@ re-django:
 no-venv:
 	rm -rf env/ venv/ .venv/
 re-mig:
-	make no-sqlite-db && make clear-linux && make re-django && make mig && make cru && make collect && make test && make run-asgi
+	make no-sqlite-db && make clear-linux && make re-django & make i && make mig && make cru && make collect && make test && make run-asgi
 run-wsgi:
-	gunicorn core.wsgi:application --bind 0.0.0.0:4000
+	gunicorn core.wsgi:application --bind 0.0.0.0:1026
 tunnel:
-	jprq http 7 -s platform
+	jprq http 1026 -s goride-api
 open-bash:
-	docker exec -it drf_api bash
-backup-sqlite:
-	mkdir -p backups
-	cp db.sqlite3 backups/db_backup_$$(date +"%Y%m%d_%H%M%S").sqlite3
-backup-postgres:
-	@mkdir -p backups
-	@bash -c 'pg_dump -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -d $(DB_NAME) > backups/db_backup_$$(date +"%Y%m%d_%H%M%S").sql'
+	sudo docker exec -it goride_api bash
+down:
+	sudo docker compose down
+up:
+	sudo docker compose up -d --build
+logs:
+	sudo docker compose logs
+restart:
+	sudo docker rm -f goride_api goride_nginx goride_redis & make down & make up

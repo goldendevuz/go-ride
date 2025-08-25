@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 phone=phone,
                 email=email,
                 password='test1234',  # test parol
-                role=PATIENT,
+                profile__role=PATIENT,
                 auth_type=VIA_PHONE,
                 auth_status=NEW,
             )

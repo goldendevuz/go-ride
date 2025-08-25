@@ -15,8 +15,8 @@ echo "========== Starting Tunnels =========="
 if [ -n "$JPRQ_AUTH_KEY" ]; then
   echo "Authenticating jprq..."
   jprq auth "$JPRQ_AUTH_KEY"
-  echo "Starting jprq tunnel on port 1024..."
-  jprq http 4000 -s "$JPRQ_URL" > jprq.log 2>&1 &
+  echo "Starting jprq tunnel on port 1026..."
+  jprq http 1026 -s "$JPRQ_URL" > jprq.log 2>&1 &
   sleep 2
   JPRQ_URL=$(grep -o 'https://[a-zA-Z0-9.-]*\.jprq\.site' jprq.log | head -n1)
 fi
@@ -25,8 +25,8 @@ fi
 if [ -n "$NGROK_AUTH_TOKEN" ]; then
   echo "Authenticating ngrok..."
   ngrok config add-authtoken "$NGROK_AUTH_TOKEN"
-  echo "Starting ngrok tunnel on port 1024..."
-  ngrok http --url=$NGROK_URL 4000 > /dev/null &
+  echo "Starting ngrok tunnel on port 1026..."
+  ngrok http --url=$NGROK_URL 1026 > /dev/null &
   sleep 2
 fi
 

@@ -6,13 +6,14 @@ from apps.v1.system.models import NotificationSetting, Payment
 from django.contrib.auth import get_user_model
 from apps.v1.system.models import Notification
 from apps.v1.system.tasks import send_notification
+from apps.v1.user.models.profile import Profile
 
 User = get_user_model()
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=Profile)
 def create_notification_settings(sender, instance, created, **kwargs):
     if created:
-        NotificationSetting.objects.create(user=instance)
+        NotificationSetting.objects.create(profile=instance)
         print(f"Notification settings created for {instance}")
 
 @receiver(pre_save, sender=Payment)
@@ -26,7 +27,7 @@ def validate_payment_status(sender, instance, **kwargs):
             print(f"Payment {instance.id} status changed from {prev.status} to {instance.status}")
             if instance.status in [Payment.Status.PAID, Payment.Status.REFUNDED]:
                 if not instance.reviewed_by:
-                    instance.reviewed_by = instance.user
+                    instance.reviewed_by = instance.profile
                 if not instance.reviewed_at:
                     instance.reviewed_at = now()
 
