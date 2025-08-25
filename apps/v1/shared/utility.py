@@ -18,8 +18,8 @@ username_regex = re.compile(r"^[a-zA-Z0-9_.-]+$")
 #     regex=r'^\+998\d{9}$',
 #     message="Telefon raqam quyidagi formatda bo'lishi kerak: '+998XXXXXXXXX' (masalan, +998901234567)."
 # )
-    # phone_number = phonenumbers.parse(username_phone_email)
-    # if phonenumbers.is_valid_number(phone_number):
+    # phone = phonenumbers.parse(username_phone_email)
+    # if phonenumbers.is_valid_number(phone):
     #     username_phone_email = 'phone'
 
 def check_username_phone_email(username_phone_email):
@@ -34,7 +34,7 @@ def check_username_phone_email(username_phone_email):
     raise ValidationError(data)
 
 def check_user_type(user_input):
-    # phone_number = phonenumbers.parse(user_input)
+    # phone = phonenumbers.parse(user_input)
     if re.fullmatch(email_regex, user_input):
         user_input = 'email'
     elif re.fullmatch(phone_regex, user_input):

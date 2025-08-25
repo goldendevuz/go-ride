@@ -128,7 +128,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+core/.env
 .venv
 env/
 venv/
@@ -177,3 +177,4 @@ staticfiles/
 # Ignore migration files, but not __init__.py
 **/migrations/*
 !**/migrations/__init__.py
+backups/

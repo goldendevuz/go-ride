@@ -1,50 +1,52 @@
+from adrf.serializers import ModelSerializer
+from django.db.models import Q
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import update_last_login
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import FileExtensionValidator
-from rest_framework.generics import get_object_or_404
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
 
 from apps.v1.shared.utility import check_username_phone_email, send_email, send_phone_code, check_user_type
-from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE
-from django.db.models import Q
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
-from icecream import ic
+from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE, UserConfirmation, Profile
+from apps.v1.user.tasks import process_user_photo
 
-
-class SignUpSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
+class SignUpSerializer(ModelSerializer):
     username_phone_email = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = User
-        fields = (
-            'id',
-            'auth_type',
-            'auth_status',
-            'username_phone_email',  # Include it in the serialized output
-        )
+        fields = list(
+            f.name for f in User._meta.fields if f.name not in ('password', 'is_staff', 'is_superuser'))
+        fields += ('username_phone_email',)
         extra_kwargs = {
             'auth_type': {'read_only': True, 'required': False},
             'auth_status': {'read_only': True, 'required': False},
         }
 
     def create(self, validated_data):
-        verify_value = validated_data.pop('verify_value', None)
-        auth_type = validated_data.get('auth_type')
+        verify_value = validated_data.pop("verify_value", None)
+        auth_type = validated_data.pop("auth_type", None)
+        password = validated_data.pop("password", None)
 
-        user = User.objects.create(auth_type=auth_type)  # don't set email or phone yet
+        # Email/phone ajratilgan bo‘lsa, tozalaymiz
+        validated_data.pop("username_phone_email", None)
 
+        # user create
+        user = User(auth_type=auth_type, **validated_data)
+        if password:
+            user.set_password(password)
+        user.save()
+
+        # verify code yaratish va yuborish
         code = user.create_verify_code(auth_type, verify_value=verify_value)
-
         if auth_type == VIA_EMAIL:
             send_email(verify_value, code)
         elif auth_type == VIA_PHONE:
             if False in send_phone_code(verify_value, code).values():
                 raise ValidationError({
-                    "message": "Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring, yoki admin bilan bog'laning"
+                    "message": "Xatolik yuz berdi. Iltimos qaytadan urinib ko‘ring, yoki admin bilan bog‘laning"
                 })
 
         return user
@@ -76,7 +78,7 @@ class SignUpSerializer(serializers.ModelSerializer):
                 "message": "Bu email allaqachon ma'lumotlar bazasida bor"
             }
             raise ValidationError(data)
-        elif value and User.objects.filter(phone_number=value, auth_status__in=[CODE_VERIFIED, DONE, PHOTO_DONE]).exists():
+        elif value and User.objects.filter(phone=value, auth_status__in=[CODE_VERIFIED, DONE, PHOTO_DONE]).exists():
             data = {
                 "message": "Bu telefon raqami allaqachon ma'lumotlar bazasida bor"
             }
@@ -90,7 +92,6 @@ class SignUpSerializer(serializers.ModelSerializer):
         data.update(instance.token())
 
         return data
-
 
 class ChangeUserInformation(serializers.Serializer):
     first_name = serializers.CharField(write_only=True, required=True)
@@ -142,7 +143,6 @@ class ChangeUserInformation(serializers.Serializer):
         instance.save()
         return instance
 
-
 class ChangeUserPhotoSerializer(serializers.Serializer):
     photo = serializers.ImageField(validators=[FileExtensionValidator(allowed_extensions=[
         'jpg', 'jpeg', 'png', 'heic', 'heif'
@@ -154,8 +154,11 @@ class ChangeUserPhotoSerializer(serializers.Serializer):
             instance.photo = photo
             instance.auth_status = PHOTO_DONE
             instance.save()
-        return instance
 
+            # ✅ Celery taskni chaqiramiz
+            process_user_photo.delay(instance.id)
+
+        return instance
 
 class LoginSerializer(TokenObtainPairSerializer):
 
@@ -165,14 +168,14 @@ class LoginSerializer(TokenObtainPairSerializer):
         self.fields['username'] = serializers.CharField(required=False, read_only=True)
 
     def auth_validate(self, data):
-        user_input = data.get('userinput')  # email, phone_number, username
+        user_input = data.get('userinput')  # email, phone, username
         if check_user_type(user_input) == 'username':
             username = user_input
         elif check_user_type(user_input) == "email":  # Anora@gmail.com   -> anOra@gmail.com
             user = self.get_user(email__iexact=user_input) # user get method orqali user o'zgartiruvchiga biriktirildi
             username = user.username
         elif check_user_type(user_input) == 'phone':
-            user = self.get_user(phone_number=user_input)
+            user = self.get_user(phone=user_input)
             username = user.username
         else:
             data = {
@@ -215,62 +218,42 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def get_user(self, **kwargs):
         users = User.objects.filter(**kwargs)
-        # ic(users)
-        
+        # ic(user)
+
         if not users.exists():
             raise ValidationError(
                 {
                     'message': "User account not found"
                 }
             )
-        
+
         if users.count() > 1:
-            # Handle duplicate credentials: Decide how to handle multiple users
-            # For example, raising an error or selecting the user with a more specific status
-            # Here, I'm using a more specific filter to handle duplicates
-            users = users.filter(auth_status=PHOTO_DONE)  # Adjust this logic based on your needs
-            
+            users = users.filter(auth_status=PHOTO_DONE)
+
             if users.count() > 1:
-                # Still multiple users after filtering, raise an error or handle as needed
                 raise ValidationError(
                     {
                         'message': "Duplicate user accounts found"
                     }
                 )
-        
+
         return users.first()
 
-
-class LoginRefreshSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
-
+class LoginRefreshSerializer(TokenRefreshSerializer):
     def validate(self, attrs):
-        # Get access token from the authenticated request context
-        request = self.context.get('request')
-        if not request or not hasattr(request, 'auth'):
-            raise serializers.ValidationError("Access token missing from request.")
+        try:
+            refresh = RefreshToken(attrs['refresh'])
+        except TokenError:
+            raise ValidationError({'refresh': 'Token noto‘g‘ri yoki muddati tugagan'})
 
-        access_token = request.auth  # This should be a JWT token string
-        access_token_instance = AccessToken(access_token)
-
-        user_id = access_token_instance.get('user_id')
-        user = get_object_or_404(User, id=user_id)
-        update_last_login(None, user)
-
-        # Validate and rotate refresh token
-        refresh_token = attrs['refresh']
-        refresh = RefreshToken(refresh_token)
         data = {
-            'access_token': str(refresh.access_token),
+            'access': str(refresh.access_token),
             'refresh': str(refresh),
         }
-
         return data
-
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
-
 
 class ResetPasswordSerializer(serializers.Serializer):
     username_phone_email = serializers.CharField(write_only=True, required=True)
@@ -283,8 +266,56 @@ class ResetPasswordSerializer(serializers.Serializer):
                     'message': "Email yoki telefon raqami kiritilishi shart!"
                 }
             )
-        user = User.objects.filter(Q(phone_number=username_phone_email) | Q(email=username_phone_email))
+        user = User.objects.filter(Q(phone=username_phone_email) | Q(email=username_phone_email))
         if not user.exists():
             raise NotFound(detail="User not found")
         attrs['user'] = user.first()
         return attrs
+
+class ForgetPasswordSerializer(serializers.Serializer):
+    verify_type = serializers.ChoiceField(choices=['via_email', 'via_phone'])
+    verify_value = serializers.CharField()
+
+    def validate(self, attrs):
+        verify_type = attrs.get('verify_type')
+        verify_value = attrs.get('verify_value')
+
+        # verify_type ga qarab, qayerdan izlash kerakligini aniqlaymiz
+        if verify_type == 'via_email':
+            user = User.objects.filter(email__iexact=verify_value).first()
+        else:  # via_phone
+            user = User.objects.filter(phone=verify_value).first()
+
+        if not user:
+            raise serializers.ValidationError("Bunday foydalanuvchi topilmadi.")
+        attrs['user'] = user
+        return attrs
+
+    def create(self, validated_data):
+        user = validated_data['user']
+        verify_type = validated_data['verify_type']
+        verify_value = validated_data['verify_value']
+
+        # Eski, tasdiqlanmagan kodlarni o'chirish (ixtiyoriy)
+        UserConfirmation.objects.filter(
+            user=user,
+            verify_type=verify_type,
+            is_confirmed=False
+        ).delete()
+
+        code = user.create_verify_code(verify_type, verify_value)
+        # Bu yerda kodni yuborish uchun email yoki sms jo'natish funksiyasini chaqirishingiz mumkin
+
+        return {'message': 'Tasdiqlash kodi yuborildi.', 'code': code if True else 'hidden'}
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        read_only_fields = ('user',)
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if hasattr(user, 'profile'):
+            raise serializers.ValidationError("Foydalanuvchining profili allaqachon mavjud.")
+        return Profile.objects.create(user=user, **validated_data)

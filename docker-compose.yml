@@ -1,12 +1,12 @@
 services:
   api:
     build: .
-    container_name: auth_api
+    container_name: medic_api
     ports:
-      - "1024:1024"
-      - "1025:1025"
+      - "4000:4000"
+      - "4001:4001"
     env_file:
-      - .env
+      - core/.env
     volumes:
       - .:/usr/src/app
       - ./static:/usr/src/app/static

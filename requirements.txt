@@ -19,5 +19,14 @@ eskiz_sms
 environs
 pytest
 pytest-factoryboy
-drf-restwind
 drf-standardized-errors
+psycopg
+django-filter
+django-ulid
+django-redis
+django-ratelimit
+django-schema-viewer==0.5.3
+celery
+flower
+adrf==0.1.9
+drf-yasg==1.21.10

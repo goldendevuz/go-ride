@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import CreateUserView, VerifyAPIView, GetNewVerification, \
     UpdateUserInformationView, ChangeUserPhotoView, LoginView, LoginRefreshView, \
-    LogOutView, ResetPasswordView, PasswordGeneratorView, test_login
+    LogOutView, ResetPasswordView, PasswordGeneratorView, test_login, ForgetPasswordAPIView, ProfileDetailUpdateView
 
 urlpatterns = [
     path('signup/', CreateUserView.as_view(), name='signup'),
@@ -14,6 +14,8 @@ urlpatterns = [
     path('', UpdateUserInformationView.as_view(), name='update'),
     path('photo/', ChangeUserPhotoView.as_view()),
     path('reset-password/', ResetPasswordView.as_view()),
+    path('forget-password/', ForgetPasswordAPIView.as_view(), name='forget-password'),
     path('test-login/', test_login, name='test-login'),
     path('generate-password/', PasswordGeneratorView.as_view(), name='generate-password'),
+    path('profile/', ProfileDetailUpdateView.as_view(), name='profile-detail-update'),
 ]

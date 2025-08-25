@@ -1,10 +1,9 @@
 import random
 import string
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import datetime
-from rest_framework import permissions, status
+from rest_framework import permissions, status, generics
 from rest_framework.exceptions import ValidationError, NotFound
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,9 +15,8 @@ from rest_framework.decorators import api_view
 from apps.v1.shared.utils.response import success_response
 from apps.v1.shared.utility import send_email, check_username_phone_email, send_phone_code
 from .serializers import SignUpSerializer, ChangeUserInformation, ChangeUserPhotoSerializer, LoginSerializer, \
-    LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer
-from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation
-
+    LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer, ForgetPasswordSerializer, ProfileSerializer
+from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation, Profile
 
 class CreateUserView(CreateAPIView):
     queryset = User.objects.all()
@@ -32,12 +30,6 @@ class VerifyAPIView(APIView):
     def post(self, request, *args, **kwargs):
         user = self.request.user             # user ->
         code = self.request.data.get('code') # 4083
-        # if user.auth_status != NEW:
-        #     data = {
-        #         "auth_status": user.auth_status,
-        #         "message": "Siz allaqachon tasdiqlangan hisobga egasiz"
-        #     }
-        #     raise ValidationError(data)
 
         self.check_verify(user, code)
         return Response(
@@ -51,10 +43,6 @@ class VerifyAPIView(APIView):
     @staticmethod
     def check_verify(user, code):       # 12:03 -> 12:05 => expiration_time=12:05   12:04
         verifies = user.verify_codes.filter(expiration_time__gte=datetime.now(), code=code, is_confirmed=False)
-        # ic(verifies)
-        # ic(user.__dict__)
-        # ic(code)
-        # ic(UserConfirmation.objects.filter(user_id=user.id, code=code).first().__dict__)
         usr = UserConfirmation.objects.filter(user_id=user.id, code=code).first()
         if not verifies.exists():
             data = {
@@ -66,33 +54,24 @@ class VerifyAPIView(APIView):
         if user.auth_status == NEW:
             user.auth_status = CODE_VERIFIED
             if usr.verify_type == VIA_PHONE:
-                user.phone_number = usr.verify_value
+                user.phone = usr.verify_value
             elif usr.verify_type == VIA_EMAIL:
                 user.email = usr.verify_value
             user.save()
         return True
-
 
 class GetNewVerification(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        # if user.auth_status != NEW:
-        #     data = {
-        #         "success": True,
-        #         "auth_status": user.auth_status,
-        #         "message": "Siz allaqachon tasdiqlangan hisobga egasiz"
-        #     }
-        #     raise ValidationError(data)
-        # ic(request.user.__dict__)
         self.check_verification(user)
         if user.auth_type == VIA_EMAIL:
             code = user.create_verify_code(VIA_EMAIL)
             send_email(user.email, code)
         elif user.auth_type == VIA_PHONE:
             code = user.create_verify_code(VIA_PHONE)
-            send_phone_code(user.phone_number, code)
+            send_phone_code(user.phone, code)
         else:
             data = {
                 "message": "Email yoki telefon raqami notogri"
@@ -132,14 +111,13 @@ class UpdateUserInformationView(UpdateAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         super(UpdateUserInformationView, self).partial_update(request, *args, **kwargs)
-        
+
         data = {
             'success': True,
             "message": "User updated successfully",
             'auth_status': self.request.user.auth_status,
         }
         return Response(data, status=status.HTTP_200_OK)
-
 
 class ChangeUserPhotoView(APIView):
     permission_classes = [IsAuthenticated]
@@ -150,18 +128,14 @@ class ChangeUserPhotoView(APIView):
             user = request.user
             serializer.update(user, serializer.validated_data)
             return success_response("Rasm muvaffaqiyatli o'zgartirildi", status_code=status.HTTP_200_OK)
-        
-        # Let your custom exception handler deal with it
-        raise ValidationError(serializer.errors)
 
+        raise ValidationError(serializer.errors)
 
 class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
 
-
 class LoginRefreshView(TokenRefreshView):
     serializer_class = LoginRefreshSerializer
-
 
 class LogOutView(APIView):
     serializer_class = LogoutSerializer
@@ -184,7 +158,6 @@ class LogOutView(APIView):
                 "message": "Token is invalid or expired"
             }
             raise ValidationError(data)
-
 
 class ResetPasswordView(APIView):
     permission_classes = [AllowAny]
@@ -211,6 +184,16 @@ class ResetPasswordView(APIView):
                 "user_status": user.auth_status,
             }, status=status.HTTP_200_OK
         )
+
+class ForgetPasswordAPIView(GenericAPIView):
+    serializer_class = ForgetPasswordSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.save()
+        return Response(data, status=status.HTTP_200_OK)
 
 class PasswordGeneratorView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -243,3 +226,13 @@ class PasswordGeneratorView(APIView):
 @api_view(['GET'])
 def test_login(request):
     return Response({"message": "Hello, world!"})
+
+class ProfileDetailUpdateView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        try:
+            return self.request.user.profile
+        except Profile.DoesNotExist:
+            raise ValidationError({'detail': 'Profile topilmadi'})

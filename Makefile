@@ -11,9 +11,9 @@ cru:
 test:
 	python3 manage.py test
 run-asgi:
-	uvicorn core.asgi:application --host 0.0.0.0 --port 1024 --reload
+	uvicorn core.asgi:application --host 0.0.0.0 --port 4000 --reload
 run:
-	python manage.py runserver 0.0.0.0:1024
+	python manage.py runserver 0.0.0.0:4000
 
 #others
 git-rm-idea:
@@ -42,8 +42,14 @@ no-venv:
 re-mig:
 	make no-sqlite-db && make clear-linux && make re-django && make mig && make cru && make collect && make test && make run-asgi
 run-wsgi:
-	gunicorn core.wsgi:application --bind 0.0.0.0:1024
+	gunicorn core.wsgi:application --bind 0.0.0.0:4000
 tunnel:
 	jprq http 7 -s platform
 open-bash:
 	docker exec -it drf_api bash
+backup-sqlite:
+	mkdir -p backups
+	cp db.sqlite3 backups/db_backup_$$(date +"%Y%m%d_%H%M%S").sqlite3
+backup-postgres:
+	@mkdir -p backups
+	@bash -c 'pg_dump -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -d $(DB_NAME) > backups/db_backup_$$(date +"%Y%m%d_%H%M%S").sql'
