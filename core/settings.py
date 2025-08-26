@@ -44,14 +44,15 @@ THIRD_APPS = {
     'schema_viewer',
     'adrf',
     'drf_spectacular',
-    'drf_spectacular_sidecar',  # required for Django collectstatic discovery
+    'drf_spectacular_sidecar',
 }
 
 LOCAL_APPS = [
     'apps.v1.shared',
-    'apps.v1.user',
-    'apps.v1.system',
-    'apps.v1.main'
+    'apps.v1.users',
+    'apps.v1.rides',
+    'apps.v1.finances',
+    'apps.v1.communications',
 ]
 
 INSTALLED_APPS += THIRD_APPS
@@ -309,4 +310,4 @@ SPECTACULAR_SETTINGS = {
     'SCHEMA_PATH_PREFIX': r'/api/v[0-9]/',  # Example: /api/v1/users will get 'users' tag
 }
 
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "users.User"

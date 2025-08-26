@@ -1,7 +1,7 @@
 import time
 import asyncio
 from django.core.management.base import BaseCommand
-from apps.v1.user.models import User  # O'zingdagi User modelga moslashtir
+from apps.v1.users.models import User  # O'zingdagi User modelga moslashtir
 
 REPEAT_COUNT = 100_000
 STEP = 10_000

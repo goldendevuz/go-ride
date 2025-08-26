@@ -19,8 +19,10 @@ urlpatterns = [
     path(API_V1_URL + 'api-auth/', include('rest_framework.urls')),
 
     # Include your app routes
-    path(API_V1_URL + 'users/', include('apps.v1.user.urls')),
-    path(API_V1_URL + 'system/', include('apps.v1.system.urls')),
+    # path(API_V1_URL + 'communications/', include('apps.v1.communications.urls')),
+    # path(API_V1_URL + 'finances/', include('apps.v1.finances.urls')),
+    # path(API_V1_URL + 'rides/', include('apps.v1.rides.urls')),
+    path(API_V1_URL + 'users/', include('apps.v1.users.urls')),
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

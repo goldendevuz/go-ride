@@ -12,3 +12,5 @@ make startapp base
 make re-migrate
 make backup
 make clear-backups
+make seed_languages
+make open-bash

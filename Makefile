@@ -55,3 +55,5 @@ logs:
 	sudo docker compose logs
 restart:
 	sudo docker rm -f goride_api goride_nginx goride_redis & make down & make up
+seed_languages:
+	python manage.py seed_languages
