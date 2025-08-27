@@ -24,3 +24,6 @@ drf-spectacular[sidecar]
 djangorestframework-jsonapi[django-filter]
 Faker
 psycopg2-binary
+django-rosetta
+django-parler
+django-parler-rest

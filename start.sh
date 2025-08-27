@@ -22,19 +22,19 @@ if [ -n "$JPRQ_AUTH_KEY" ]; then
 fi
 
 # Start ngrok tunnel
-if [ -n "$NGROK_AUTH_TOKEN" ]; then
-  echo "Authenticating ngrok..."
-  ngrok config add-authtoken "$NGROK_AUTH_TOKEN"
-  echo "Starting ngrok tunnel on port 1026..."
-  ngrok http --url=$NGROK_URL 1026 > /dev/null &
-  sleep 2
-fi
+# if [ -n "$NGROK_AUTH_TOKEN" ]; then
+#   echo "Authenticating ngrok..."
+#   ngrok config add-authtoken "$NGROK_AUTH_TOKEN"
+#   echo "Starting ngrok tunnel on port 1026..."
+#   ngrok http --url=$NGROK_URL 1026 > /dev/null &
+#   sleep 2
+# fi
 
 # Show tunnel URLs
 echo ""
 echo "========== Public URLs =========="
 [ -n "$JPRQ_URL" ] && echo "🌀 jprq  → $JPRQ_URL"
-[ -n "$NGROK_URL" ] && echo "🚀 ngrok → https://$NGROK_URL"
+# [ -n "$NGROK_URL" ] && echo "🚀 ngrok → https://$NGROK_URL"
 echo "================================="
 
 # Start the Uvicorn ASGI server

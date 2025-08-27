@@ -19,7 +19,7 @@ run:
 git-rm-idea:
 	git rm -r --cached .idea/
 collect:
-	python manage.py collectstatic --no-input
+	python manage.py collectstatic --noinput
 rm-static:
 	rm -rf staticfiles/
 migration:
@@ -50,7 +50,7 @@ open-bash:
 down:
 	sudo docker compose down
 up:
-	sudo docker compose up -d --build
+	sudo docker compose up --build
 logs:
 	sudo docker compose logs
 restart:

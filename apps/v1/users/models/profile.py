@@ -3,7 +3,7 @@ from django.db import models
 from apps.v1.shared.enums import GenderChoices, RoleChoices, ThemeChoices
 from apps.v1.shared.validators import phone_regex, validate_age, validate_full_name
 from apps.v1.shared.models import BaseModel
-from core.envs import DEFAULT_LANGUAGE_ID
+# from core.envs import DEFAULT_LANGUAGE_ID # This line is no longer needed
 
 class Profile(BaseModel):
     user = models.OneToOneField("users.User", on_delete=models.CASCADE, related_name='profile')
@@ -16,7 +16,6 @@ class Profile(BaseModel):
         related_name="profiles",
         null=True,
         blank=True,
-        default=DEFAULT_LANGUAGE_ID,
     )
     gender = models.CharField(choices=GenderChoices.choices, max_length=10, null=True, blank=True)
     birth_date = models.DateField(

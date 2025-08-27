@@ -1,6 +1,9 @@
 from datetime import timedelta
 from pathlib import Path
 
+from django.utils.translation import gettext_lazy as _
+from django.utils import translation
+
 from .envs import (DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, SECRET_KEY, DEBUG, ALLOWED_HOSTS,
                    CSRF_TRUSTED_ORIGINS, CORS_ALLOWED_ORIGINS,
                    EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME, REDIS_URL)
@@ -45,6 +48,9 @@ THIRD_APPS = {
     'adrf',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'rosetta',
+    'parler',
+    'parler_rest',
 }
 
 LOCAL_APPS = [
@@ -66,10 +72,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.locale.LocaleMiddleware',             
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
 
 ROOT_URLCONF = 'core.urls'
 
@@ -137,13 +145,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
 USE_TZ = True
+
+USE_L10N = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -311,3 +319,38 @@ SPECTACULAR_SETTINGS = {
 }
 
 AUTH_USER_MODEL = "users.User"
+
+LANGUAGE_CODE = 'ja'
+
+LANGUAGES = (
+    ("en-us", _("English (US)")),
+    ("ru", _("Russian")),
+    ("uz", _("Uzbek")),
+    ("ar", _("Arabic")),
+    ("tg", _("Tajik")),
+    ("ja", _("Japanese")),
+)
+
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/',
+]
+
+PARLER_LANGUAGES = {
+    None: (
+        # {'code': 'en-us'},
+        {'code': 'ru'},
+        {'code': 'uz'},
+        {'code': 'ar'},
+        {'code': 'tg'},
+        {'code': 'ja'},
+    ),
+    'default': {
+        'fallback': 'ja',
+        'hide_untranslated': False,
+    }
+}
+
+PARLER_DEFAULT_LANGUAGE_CODE = "ja"
+
+# PARLER_DEFAULT_SERIALIZER_FIELD = "core.fields.SingleLanguageTranslatedField"

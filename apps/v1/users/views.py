@@ -1,7 +1,8 @@
 import random
 import string
 from django.utils.timezone import datetime
-from apps.v1.shared.enums import AuthStatus, AuthType
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework import permissions, status, generics
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.generics import CreateAPIView, UpdateAPIView, GenericAPIView
@@ -13,6 +14,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.decorators import api_view
 
+from icecream import ic
+
+from apps.v1.shared.enums import AuthStatus, AuthType
 from apps.v1.shared.utils.response import success_response
 from apps.v1.shared.utility import send_email, check_username_phone_email, send_phone_code
 from .serializers import SignUpSerializer, ChangeUserInformation, ChangeUserPhotoSerializer, LoginSerializer, \
@@ -198,6 +202,7 @@ class ForgetPasswordAPIView(GenericAPIView):
 
 class PasswordGeneratorView(APIView):
     permission_classes = [permissions.AllowAny]
+
     def get(self, request):
         length = int(request.query_params.get('length', 8))
         include_upper = request.query_params.get('upper', 'true') == 'true'
@@ -206,7 +211,10 @@ class PasswordGeneratorView(APIView):
         include_symbols = request.query_params.get('symbols', 'false') == 'true'
 
         if length < 8:
-            return Response({"error": "Minimum password length is 8."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": str(_("Minimum password length is 8."))},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         charset = ''
         if include_upper:
@@ -219,14 +227,19 @@ class PasswordGeneratorView(APIView):
             charset += string.punctuation
 
         if not charset:
-            return Response({"error": "No character sets selected."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": str(_("No character sets selected."))},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         password = ''.join(random.SystemRandom().choice(charset) for _ in range(length))
-        return Response({"password": password}, status=status.HTTP_200_OK)
+        return Response({str(_("password")): password}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def test_login(request):
-    return Response({"message": "Hello, world!"})
+    ic(request.user.profile.app_language.code)
+    ic(_("Hello, world!"))
+    return Response({"message": _("Hello, world!")})
 
 class ProfileDetailUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer

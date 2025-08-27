@@ -1,14 +1,17 @@
 import random
-from django.contrib.auth.models import AbstractUser
+from datetime import timedelta
 from django.db import models
-from apps.v1.shared.enums import AuthStatus
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from apps.v1.shared.enums import AuthStatus, AuthType, EMAIL_EXPIRE, PHONE_EXPIRE
 from apps.v1.shared.models import BaseModel
 from apps.v1.shared.validators import validate_password, validate_username, validate_email_lower, phone_regex
 from ..managers import UserManager
 
 
 class User(AbstractUser, BaseModel):
-    # completely remove them
+    # Completely remove them
     first_name = None
     last_name = None
     
@@ -66,14 +69,18 @@ class User(AbstractUser, BaseModel):
     
     def create_verify_code(self, verify_type):
         from .user_confirmation import UserConfirmation
-        code = f"{random.randint(1000, 9999)}"
-        
-        if verify_type == 'email':
-            verify_value = self.email
-        elif verify_type == 'phone':
-            verify_value = self.phone
-        else:
-            verify_value = None
+
+        if verify_type not in [AuthType.VIA_PHONE.value, AuthType.VIA_EMAIL.value]:
+            raise ValidationError("Invalid verification type.")
+
+        if verify_type == AuthType.VIA_EMAIL.value and not self.email:
+            raise ValidationError("Email is required for email verification.")
+
+        if verify_type == AuthType.VIA_PHONE.value and not self.phone:
+            raise ValidationError("Phone number is required for phone verification.")
+            
+        code = random.randint(1000, 9999)
+        verify_value = getattr(self, verify_type)
 
         UserConfirmation.objects.create(
             user=self,

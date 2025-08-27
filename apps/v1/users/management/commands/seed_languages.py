@@ -8,12 +8,12 @@ class Command(BaseCommand):
     help = "Seed default languages"
 
     LANGUAGES = [
-        ("english_us", "English (US)"),
-        ("russian", "Russian"),
-        ("uzbek", "Uzbek"),
-        ("arabic", "Arabic"),
-        ("tojik", "Tajik"),
-        ("yapon", "Japanese"),
+        ("en-us", "English (US)"),
+        ("ru", "Russian"),
+        ("uz", "Uzbek"),
+        ("ar", "Arabic"),
+        ("tg", "Tajik"),
+        ("ja", "Japanese"),
     ]
 
     def handle(self, *args, **kwargs):

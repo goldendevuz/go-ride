@@ -1,0 +1,847 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GoRide v0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-27 16:47+0000\n"
+"PO-Revision-Date: 2025-08-26 19:29+0500\n"
+"Last-Translator: None None <None>\n"
+"Language-Team: Tajik <abdulmajidyunusov2@gmail.com>\n"
+"Language: tg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
+
+#: apps/v1/communications/models/contact_support.py:10
+#: apps/v1/finances/models/payment_type.py:8 apps/v1/rides/models/car_type.py:8
+#: apps/v1/rides/models/color.py:8 apps/v1/rides/models/passenger.py:21
+#: apps/v1/users/models/address.py:28 apps/v1/users/models/language.py:8
+#: apps/v1/users/models/mood.py:8
+msgid "Name"
+msgstr ""
+
+#: apps/v1/communications/models/contact_support.py:12
+#, fuzzy
+#| msgid "The display name of the support contact"
+msgid "The display name of the support contact."
+msgstr "Номи намоиши тамос бо дастгирӣ"
+
+#: apps/v1/communications/models/contact_support.py:17
+#: apps/v1/users/models/mood.py:14
+msgid "Icon"
+msgstr ""
+
+#: apps/v1/communications/models/contact_support.py:19
+msgid "Icon image."
+msgstr ""
+
+#: apps/v1/communications/models/contact_support.py:22
+#: apps/v1/finances/models/promo_information.py:20
+#, fuzzy
+#| msgid "display order"
+msgid "Display Order"
+msgstr "Тартиби намоиш"
+
+#: apps/v1/communications/models/contact_support.py:25
+#, fuzzy
+#| msgid "The order in which this contact appears"
+msgid "The order in which this contact appears."
+msgstr "Тартиби намоиши ин тамос"
+
+#: apps/v1/communications/models/contact_support.py:28
+msgid "URL"
+msgstr ""
+
+#: apps/v1/communications/models/contact_support.py:30
+#, fuzzy
+#| msgid "The link to the support contact"
+msgid "The link to the support contact."
+msgstr "Ссилка ба тамос бо дастгирӣ"
+
+#: apps/v1/communications/models/contact_support.py:35
+msgid "Contact Support"
+msgstr "Дастгирии тамос"
+
+#: apps/v1/communications/models/contact_support.py:36
+msgid "Contact Supports"
+msgstr "Дастгирии тамосҳо"
+
+#: apps/v1/communications/models/faq.py:10
+msgid "Category"
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:14
+msgid "The category this FAQ belongs to."
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:19
+msgid "Question"
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:21
+msgid "The FAQ question text."
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:24
+msgid "Answer"
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:25
+msgid "The FAQ answer text."
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:31
+msgid "FAQ"
+msgstr ""
+
+#: apps/v1/communications/models/faq.py:32
+msgid "FAQs"
+msgstr ""
+
+#: apps/v1/communications/models/image.py:9
+msgid "File"
+msgstr ""
+
+#: apps/v1/communications/models/image.py:11
+msgid "The binary content of the image file"
+msgstr ""
+
+#: apps/v1/communications/models/image.py:16
+msgid "Alt Text"
+msgstr ""
+
+#: apps/v1/communications/models/image.py:20
+msgid "Alternative text for the image"
+msgstr ""
+
+#: apps/v1/communications/models/image.py:26
+msgid "Image"
+msgstr ""
+
+#: apps/v1/communications/models/image.py:27
+msgid "Images"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:12
+msgid "Owner"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:13
+msgid "The profile that sent this message"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:19
+msgid "Receiver"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:20
+msgid "The profile that received this message"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:23
+msgid "Has Read"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:25
+msgid "Whether the message has been read by the receiver"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:30
+msgid "Text"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:33
+msgid "The message text content"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:39
+msgid "Message"
+msgstr ""
+
+#: apps/v1/communications/models/message.py:40
+msgid "Messages"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:14
+#: apps/v1/finances/models/payment.py:14 apps/v1/finances/models/wallet.py:12
+#: apps/v1/rides/models/donate_to_driver.py:12
+msgid "Profile"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:15
+msgid "The profile that receives this notification"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:18
+msgid "State"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:22
+msgid "The current state of the notification"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:25
+msgid "Sent At"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:27
+msgid "The datetime when the notification was sent"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:32
+msgid "Title"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:34
+msgid "The title of the notification"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:37
+#: apps/v1/finances/models/promo_information.py:15
+msgid "Description"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:38
+msgid "The description or body of the notification"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:44
+msgid "Notification"
+msgstr ""
+
+#: apps/v1/communications/models/notification.py:45
+msgid "Notifications"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:13 apps/v1/finances/models/wallet.py:24
+msgid "Wallet"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:14
+msgid "The wallet this card belongs to"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:17
+msgid "Card Number"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:21
+msgid "Card number must be 16 digits"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:23
+msgid "The 16-digit card number"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:26
+msgid "Account Holder Name"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:29
+msgid "The full name of the account holder"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:32
+msgid "Expires At"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:34
+msgid "The expiration date of the card (must not be in the past)"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:37
+msgid "CVV"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:42
+msgid "The 3-digit CVV security code"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:47
+msgid "Card"
+msgstr ""
+
+#: apps/v1/finances/models/card.py:48
+msgid "Cards"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:15
+msgid "The profile that made the payment"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:18
+#: apps/v1/rides/models/donate_to_driver.py:23 apps/v1/shared/enums.py:61
+msgid "Amount"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:20
+msgid "The amount of the payment (minimum 1000)"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:26
+#: apps/v1/finances/models/payment_type.py:16
+msgid "Payment Type"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:27
+msgid "The type of payment used"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:30
+msgid "Paid At"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:33
+msgid "The datetime when the payment was completed"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:41
+msgid "Reviewed By"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:42
+msgid "The profile that reviewed this payment"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:45
+msgid "Reviewed At"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:48
+msgid "The datetime when the payment was reviewed"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:51
+msgid "Status"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:55
+msgid "The current status of the payment"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:58
+msgid "Receipt"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:62
+msgid "An optional uploaded receipt for the payment"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:67
+#: apps/v1/rides/models/donate_to_driver.py:31
+msgid "Payment"
+msgstr ""
+
+#: apps/v1/finances/models/payment.py:68
+msgid "Payments"
+msgstr ""
+
+#: apps/v1/finances/models/payment_type.py:11
+msgid "The name of the payment type"
+msgstr ""
+
+#: apps/v1/finances/models/payment_type.py:17
+msgid "Payment Types"
+msgstr ""
+
+#: apps/v1/finances/models/promo_information.py:9
+msgid "Type"
+msgstr ""
+
+#: apps/v1/finances/models/promo_information.py:12
+msgid "The type of promotional information."
+msgstr ""
+
+#: apps/v1/finances/models/promo_information.py:17
+msgid "The description of the promotional information."
+msgstr ""
+
+#: apps/v1/finances/models/promo_information.py:22
+#, fuzzy
+#| msgid "The order in which this contact appears"
+msgid "The order in which this promo information appears."
+msgstr "Тартиби намоиши ин тамос"
+
+#: apps/v1/finances/models/promo_information.py:27
+msgid "Promo Information"
+msgstr ""
+
+#: apps/v1/finances/models/promo_information.py:28
+msgid "Promo Information Items"
+msgstr ""
+
+#: apps/v1/finances/models/wallet.py:13
+msgid "The user profile this wallet belongs to."
+msgstr ""
+
+#: apps/v1/finances/models/wallet.py:16
+msgid "Balance"
+msgstr ""
+
+#: apps/v1/finances/models/wallet.py:19
+msgid "The current balance of the wallet in the smallest currency unit."
+msgstr ""
+
+#: apps/v1/finances/models/wallet.py:25
+msgid "Wallets"
+msgstr ""
+
+#: apps/v1/rides/models/car.py:7
+msgid "Model"
+msgstr ""
+
+#: apps/v1/rides/models/car.py:9
+msgid "The brand and model of the car (e.g., 'Toyota Camry')."
+msgstr ""
+
+#: apps/v1/rides/models/car.py:15 apps/v1/rides/models/color.py:16
+msgid "Color"
+msgstr ""
+
+#: apps/v1/rides/models/car.py:16
+msgid "The color of the car."
+msgstr ""
+
+#: apps/v1/rides/models/car.py:19
+msgid "Plate Number"
+msgstr ""
+
+#: apps/v1/rides/models/car.py:22
+msgid "The unique license plate number of the car."
+msgstr ""
+
+#: apps/v1/rides/models/car.py:28 apps/v1/rides/models/car_type.py:16
+msgid "Car Type"
+msgstr ""
+
+#: apps/v1/rides/models/car.py:29 apps/v1/rides/models/car_type.py:11
+msgid "The type of car (e.g., Sedan, SUV)."
+msgstr ""
+
+#: apps/v1/rides/models/car.py:34
+msgid "Car"
+msgstr ""
+
+#: apps/v1/rides/models/car.py:35
+msgid "Cars"
+msgstr ""
+
+#: apps/v1/rides/models/car_type.py:17
+msgid "Car Types"
+msgstr ""
+
+#: apps/v1/rides/models/color.py:11
+msgid "The name of the color."
+msgstr ""
+
+#: apps/v1/rides/models/color.py:17
+msgid "Colors"
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:13
+msgid "The user profile making the donation."
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:19 apps/v1/shared/enums.py:41
+msgid "Driver"
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:20
+msgid "The driver receiving the donation."
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:25
+msgid "The amount of the donation in the smallest currency unit."
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:32
+msgid "The payment record for this donation."
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:37
+msgid "Donation to Driver"
+msgstr ""
+
+#: apps/v1/rides/models/donate_to_driver.py:38
+msgid "Donations to Drivers"
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:9
+msgid "Gender"
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:12
+msgid "The gender of the passenger."
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:15
+msgid "Age"
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:18
+msgid "The age of the passenger."
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:23
+msgid "The first name of the passenger."
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:26
+msgid "Full Name"
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:30
+msgid "The full name of the passenger."
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:36
+msgid "Added By"
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:37
+msgid "The user profile that added this passenger."
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:42 apps/v1/shared/enums.py:39
+msgid "Passenger"
+msgstr ""
+
+#: apps/v1/rides/models/passenger.py:43
+msgid "Passengers"
+msgstr ""
+
+#: apps/v1/shared/enums.py:7 apps/v1/shared/enums.py:20
+msgid "New"
+msgstr ""
+
+#: apps/v1/shared/enums.py:8
+msgid "Code Verified"
+msgstr ""
+
+#: apps/v1/shared/enums.py:9
+msgid "Done"
+msgstr ""
+
+#: apps/v1/shared/enums.py:14
+msgid "Via Phone"
+msgstr ""
+
+#: apps/v1/shared/enums.py:15
+msgid "Via Email"
+msgstr ""
+
+#: apps/v1/shared/enums.py:21
+msgid "Read"
+msgstr ""
+
+#: apps/v1/shared/enums.py:26
+msgid "System"
+msgstr ""
+
+#: apps/v1/shared/enums.py:27
+msgid "Light"
+msgstr ""
+
+#: apps/v1/shared/enums.py:28
+msgid "Dark"
+msgstr ""
+
+#: apps/v1/shared/enums.py:33
+msgid "Male"
+msgstr ""
+
+#: apps/v1/shared/enums.py:34
+msgid "Female"
+msgstr ""
+
+#: apps/v1/shared/enums.py:40
+msgid "Customer"
+msgstr ""
+
+#: apps/v1/shared/enums.py:42
+msgid "Manager"
+msgstr ""
+
+#: apps/v1/shared/enums.py:43
+msgid "Admin"
+msgstr ""
+
+#: apps/v1/shared/enums.py:44
+msgid "Super Admin"
+msgstr ""
+
+#: apps/v1/shared/enums.py:54 apps/v1/shared/enums.py:83
+msgid "Pending"
+msgstr ""
+
+#: apps/v1/shared/enums.py:55
+msgid "Paid"
+msgstr ""
+
+#: apps/v1/shared/enums.py:56
+msgid "Failed"
+msgstr ""
+
+#: apps/v1/shared/enums.py:57 apps/v1/shared/enums.py:90
+msgid "Refunded"
+msgstr ""
+
+#: apps/v1/shared/enums.py:60
+msgid "Percent"
+msgstr ""
+
+#: apps/v1/shared/enums.py:64
+msgid "General"
+msgstr ""
+
+#: apps/v1/shared/enums.py:65
+msgid "Account"
+msgstr ""
+
+#: apps/v1/shared/enums.py:66
+msgid "Services"
+msgstr ""
+
+#: apps/v1/shared/enums.py:67
+msgid "Ride"
+msgstr ""
+
+#: apps/v1/shared/enums.py:71
+msgid "One Seat"
+msgstr ""
+
+#: apps/v1/shared/enums.py:72
+msgid "Two Seats"
+msgstr ""
+
+#: apps/v1/shared/enums.py:73
+msgid "Full"
+msgstr ""
+
+#: apps/v1/shared/enums.py:77
+msgid "Terms and Conditions"
+msgstr ""
+
+#: apps/v1/shared/enums.py:78
+msgid "How to Use"
+msgstr ""
+
+#: apps/v1/shared/enums.py:79
+msgid "Additional Information"
+msgstr ""
+
+#: apps/v1/shared/enums.py:84
+msgid "Scheduled"
+msgstr ""
+
+#: apps/v1/shared/enums.py:85
+msgid "Canceled"
+msgstr ""
+
+#: apps/v1/shared/enums.py:86
+msgid "Rescheduled"
+msgstr ""
+
+#: apps/v1/shared/enums.py:87
+msgid "Approved"
+msgstr ""
+
+#: apps/v1/shared/enums.py:88
+msgid "Ongoing"
+msgstr ""
+
+#: apps/v1/shared/enums.py:89
+msgid "Completed"
+msgstr ""
+
+#: apps/v1/shared/enums.py:94
+msgid "Change in Plans"
+msgstr ""
+
+#: apps/v1/shared/enums.py:95
+msgid "Waiting for Long Time"
+msgstr ""
+
+#: apps/v1/shared/enums.py:96
+msgid "Unable to Contact Driver"
+msgstr ""
+
+#: apps/v1/shared/enums.py:97
+msgid "Driver Denied to Go to Destination"
+msgstr ""
+
+#: apps/v1/shared/enums.py:98
+msgid "Driver Denied to Go to Pickup"
+msgstr ""
+
+#: apps/v1/shared/enums.py:99
+msgid "Wrong Address Shown"
+msgstr ""
+
+#: apps/v1/shared/enums.py:100
+msgid "This Price is Not Reasonable"
+msgstr ""
+
+#: apps/v1/shared/enums.py:101
+msgid "Emergency Situation"
+msgstr ""
+
+#: apps/v1/shared/enums.py:102
+msgid "Booking Mistake"
+msgstr ""
+
+#: apps/v1/shared/enums.py:103
+msgid "Poor Weather Conditions"
+msgstr ""
+
+#: apps/v1/shared/enums.py:104
+msgid "Other"
+msgstr ""
+
+#: apps/v1/users/models/address.py:8
+msgid "Longitude"
+msgstr ""
+
+#: apps/v1/users/models/address.py:9
+msgid "The longitude of the address."
+msgstr ""
+
+#: apps/v1/users/models/address.py:12
+msgid "Latitude"
+msgstr ""
+
+#: apps/v1/users/models/address.py:13
+msgid "The latitude of the address."
+msgstr ""
+
+#: apps/v1/users/models/address.py:16
+msgid "Full Address Text"
+msgstr ""
+
+#: apps/v1/users/models/address.py:18
+msgid "The full-text representation of the address."
+msgstr ""
+
+#: apps/v1/users/models/address.py:21
+msgid "Landmark"
+msgstr ""
+
+#: apps/v1/users/models/address.py:25
+msgid "A nearby landmark or point of interest."
+msgstr ""
+
+#: apps/v1/users/models/address.py:32
+msgid "A user-defined name for the address (e.g., 'Home', 'Work')."
+msgstr ""
+
+#: apps/v1/users/models/address.py:35
+msgid "Details"
+msgstr ""
+
+#: apps/v1/users/models/address.py:39
+msgid "Additional details about the address."
+msgstr ""
+
+#: apps/v1/users/models/address.py:44
+msgid "Address"
+msgstr ""
+
+#: apps/v1/users/models/address.py:45
+msgid "Addresses"
+msgstr ""
+
+#: apps/v1/users/models/language.py:11
+msgid "The full name of the language (e.g., 'English')."
+msgstr ""
+
+#: apps/v1/users/models/language.py:14
+msgid "Code"
+msgstr ""
+
+#: apps/v1/users/models/language.py:18
+msgid "The unique code for the language (e.g., 'en-us')."
+msgstr ""
+
+#: apps/v1/users/models/language.py:23
+msgid "Language"
+msgstr ""
+
+#: apps/v1/users/models/language.py:24
+msgid "Languages"
+msgstr ""
+
+#: apps/v1/users/models/mood.py:11
+msgid "The name of the mood (e.g., 'Happy', 'Sad')."
+msgstr ""
+
+#: apps/v1/users/models/mood.py:16
+msgid "An icon representing the mood."
+msgstr ""
+
+#: apps/v1/users/models/mood.py:21
+msgid "Mood"
+msgstr ""
+
+#: apps/v1/users/models/mood.py:22
+msgid "Moods"
+msgstr ""
+
+#: apps/v1/users/views.py:215
+msgid "Minimum password length is 8."
+msgstr "Ҳадди ақали дарозии парол 8 рамз аст."
+
+#: apps/v1/users/views.py:231
+msgid "No character sets selected."
+msgstr "Ҳеҷ маҷмӯи рамз интихоб нашудааст."
+
+#: apps/v1/users/views.py:236
+msgid "password"
+msgstr "Парол"
+
+#: apps/v1/users/views.py:241 apps/v1/users/views.py:242
+msgid "Hello, world!"
+msgstr "Салом, ҷаҳон!"
+
+#: core/settings.py:327
+msgid "English (US)"
+msgstr "Англисӣ (ИМА)"
+
+#: core/settings.py:328
+msgid "Russian"
+msgstr "Русӣ"
+
+#: core/settings.py:329
+msgid "Uzbek"
+msgstr "Ӯзбекӣ"
+
+#: core/settings.py:330
+msgid "Arabic"
+msgstr "Арабӣ"
+
+#: core/settings.py:331
+msgid "Tajik"
+msgstr "Тоҷикӣ"
+
+#: core/settings.py:332
+msgid "Japanese"
+msgstr "Японӣ"
+
+#, fuzzy
+#~| msgid "Icon image in binary format"
+#~ msgid "Icon image in binary format."
+#~ msgstr "Суратии айкон дар формати бинарӣ"
+
+#~ msgid "name"
+#~ msgstr "Ном"
+
+#~ msgid "icon"
+#~ msgstr "Айкон"
+
+#~ msgid "url"
+#~ msgstr "Ссылка"
+
+#, python-format
+#~ msgid "Contact %(id)s"
+#~ msgstr "Тамос %(id)s"

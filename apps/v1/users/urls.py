@@ -4,7 +4,7 @@ from .views import CreateUserView, VerifyAPIView, GetNewVerification, \
     UpdateUserInformationView, ChangeUserPhotoView, LoginView, LoginRefreshView, \
     LogOutView, ResetPasswordView, PasswordGeneratorView, test_login, ForgetPasswordAPIView, ProfileDetailUpdateView
 
-urlpatterns = [
+urlpatterns = (
     path('signup/', CreateUserView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('login/refresh/', LoginRefreshView.as_view(), name='refresh'),
@@ -18,4 +18,4 @@ urlpatterns = [
     path('test-login/', test_login, name='test-login'),
     path('generate-password/', PasswordGeneratorView.as_view(), name='generate-password'),
     path('profile/', ProfileDetailUpdateView.as_view(), name='profile-detail-update'),
-]
+)
