@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import ContactSupportViewSet
+from .views import ContactSupportViewSet, MessageViewSet
 
 router = DefaultRouter()
 router.register(
@@ -7,5 +7,6 @@ router.register(
     ContactSupportViewSet,
     basename="contact-supports"
 )
+router.register(r"messages", MessageViewSet, basename="messages")
 
 urlpatterns = router.urls

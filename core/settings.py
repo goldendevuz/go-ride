@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -6,7 +7,7 @@ from django.utils import translation
 
 from .envs import (DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, SECRET_KEY, DEBUG, ALLOWED_HOSTS,
                    CSRF_TRUSTED_ORIGINS, CORS_ALLOWED_ORIGINS,
-                   EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME, REDIS_URL)
+                   EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME, REDIS_URL, CELERY_BROKER_URL, CELERY_RESULT_BACKEND)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,6 +52,8 @@ THIRD_APPS = {
     'rosetta',
     'parler',
     'parler_rest',
+    "django_celery_beat",
+    "django_celery_results",
 }
 
 LOCAL_APPS = [
@@ -302,10 +305,6 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Barber & Salon | Casca',
     "DESCRIPTION": "Clean/Onion architecture DRF API",
@@ -320,7 +319,7 @@ SPECTACULAR_SETTINGS = {
 
 AUTH_USER_MODEL = "users.User"
 
-LANGUAGE_CODE = 'ja'
+LANGUAGE_CODE = 'en-us'
 
 LANGUAGES = (
     ("en-us", _("English (US)")),
@@ -338,7 +337,7 @@ LOCALE_PATHS = [
 
 PARLER_LANGUAGES = {
     None: (
-        # {'code': 'en-us'},
+        {'code': 'en-us'},
         {'code': 'ru'},
         {'code': 'uz'},
         {'code': 'ar'},
@@ -351,6 +350,21 @@ PARLER_LANGUAGES = {
     }
 }
 
-PARLER_DEFAULT_LANGUAGE_CODE = "ja"
+PARLER_DEFAULT_LANGUAGE_CODE = "en-us"
 
-# PARLER_DEFAULT_SERIALIZER_FIELD = "core.fields.SingleLanguageTranslatedField"
+# Celery
+CELERY_BROKER_URL = CELERY_BROKER_URL
+CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tashkent"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("redis", 6379)]},
+    }
+}

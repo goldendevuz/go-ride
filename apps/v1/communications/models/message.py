@@ -24,6 +24,13 @@ class Message(BaseModel, TranslatableModel):
         default=False,
         help_text=_("Whether the message has been read by the receiver"),
     )
+    images = models.ManyToManyField(
+        "communications.Image",
+        blank=True,
+        related_name="messages",
+        verbose_name=_("Images"),
+        help_text=_("Attached images"),
+    )
 
     translations = TranslatedFields(
         text=models.TextField(
