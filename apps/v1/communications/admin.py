@@ -8,6 +8,7 @@ from parler.models import TranslatableModel
 
 from apps.v1.shared.admin import BaseAdmin
 from .models import (
+    Chat,
     ContactSupport,
     FAQ,
     Image,
@@ -47,7 +48,7 @@ def register_model(model):
     translatable_fields = get_translatable_fields(model)
     non_translatable_fields = [
         f.name for f in model._meta.fields
-        if f.name not in ['id'] and f.name not in translatable_fields
+        if f.name not in translatable_fields
     ]
     
     # Base admin attributes
@@ -114,6 +115,7 @@ def register_model(model):
 
 # List of models to register
 registered_models = [
+    Chat,
     ContactSupport,
     FAQ,
     Image,

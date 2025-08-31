@@ -1,22 +1,37 @@
-version: "3.9"
+x-common-setup: &common
+  build: .
+  env_file:
+    - core/.env
+  volumes:
+    - .:/usr/src/app
+  restart: unless-stopped
 
 services:
   api:
-    build: .
+    <<: *common
     container_name: goride_api
+    command: bash start.sh
     ports:
-      - "1026:1026"   # DRF API
+      - "1026:1026"
       - "1025:1025"
-    env_file:
-      - core/.env
     volumes:
       - .:/usr/src/app
       - ./static:/usr/src/app/static
       - ./media:/usr/src/app/media
-    restart: unless-stopped
     user: root
     depends_on:
       - redis
+    develop:
+      watch:
+        - path: .
+          target: /usr/src/app
+          action: sync
+        - path: ./static
+          target: /usr/src/app/static
+          action: sync
+        - path: ./media
+          target: /usr/src/app/media
+          action: sync
 
   redis:
     image: redis:alpine
@@ -26,44 +41,30 @@ services:
     restart: unless-stopped
 
   celery_worker:
-    build: .
+    <<: *common
     container_name: goride_celery_worker
     command: celery -A core worker -l info
-    volumes:
-      - .:/usr/src/app
-    env_file:
-      - core/.env
     depends_on:
       - api
       - redis
-    restart: unless-stopped
 
   celery_beat:
-    build: .
+    <<: *common
     container_name: goride_celery_beat
     command: celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    volumes:
-      - .:/usr/src/app
-    env_file:
-      - core/.env
     depends_on:
       - api
       - redis
-    restart: unless-stopped
 
   flower:
-    build: .
+    <<: *common
     container_name: goride_flower
-    env_file:
-      - core/.env
-    volumes:
-      - .:/usr/src/app
     command: sh -c "sleep 5 && celery --broker=redis://redis:6379/0 flower"
     ports:
       - "5555:5555"
     depends_on:
+      - api
       - redis
-    restart: unless-stopped
 
   nginx:
     image: nginx:stable-alpine

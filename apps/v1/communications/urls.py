@@ -1,12 +1,10 @@
-from rest_framework.routers import DefaultRouter
-from .views import ContactSupportViewSet, MessageViewSet
+from django.urls import path
+from apps.v1.communications import views
 
-router = DefaultRouter()
-router.register(
-    r"contact-supports",
-    ContactSupportViewSet,
-    basename="contact-supports"
-)
-router.register(r"messages", MessageViewSet, basename="messages")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path("chat/create/", views.create_chat, name="create_chat"),
+    path("chat/<uuid:chat_id>/send/", views.send_message, name="send_message"),
+    # path("chat/<uuid:chat_id>/stream/", views.stream_messages, name="stream_messages"),
+    path("chat/<uuid:chat_id>/stream/", views.ChatStreamView.as_view(), name="chat-stream"),
+    path("chat/<uuid:chat_id>/messages/", views.list_messages, name="list_messages"),  # 🆕
+]

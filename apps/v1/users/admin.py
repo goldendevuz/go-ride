@@ -48,7 +48,7 @@ def register_model(model):
     translatable_fields = get_translatable_fields(model)
     non_translatable_fields = [
         f.name for f in model._meta.fields
-        if f.name not in ['id'] and f.name not in translatable_fields
+        if f.name not in translatable_fields
     ]
     
     # Base admin attributes

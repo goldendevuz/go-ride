@@ -1,50 +1,16 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
-from parler.models import TranslatableModel, TranslatedFields
-from apps.v1.shared.models import BaseModel
+from apps.v1.shared.models.base import BaseModel
+from django.conf import settings
 
-
-class Message(BaseModel, TranslatableModel):
-    owner = models.ForeignKey(
-        "users.Profile",
-        on_delete=models.CASCADE,
-        related_name="sent_messages",
-        verbose_name=_("Owner"),
-        help_text=_("The profile that sent this message"),
-    )
-    receiver = models.ForeignKey(
-        "users.Profile",
-        on_delete=models.CASCADE,
-        related_name="received_messages",
-        verbose_name=_("Receiver"),
-        help_text=_("The profile that received this message"),
-    )
-    has_read = models.BooleanField(
-        verbose_name=_("Has Read"),
-        default=False,
-        help_text=_("Whether the message has been read by the receiver"),
-    )
-    images = models.ManyToManyField(
-        "communications.Image",
-        blank=True,
-        related_name="messages",
-        verbose_name=_("Images"),
-        help_text=_("Attached images"),
-    )
-
-    translations = TranslatedFields(
-        text=models.TextField(
-            verbose_name=_("Text"),
-            blank=True,
-            null=True,
-            help_text=_("The message text content"),
-        ),
-    )
+class Message(BaseModel):
+    chat = models.ForeignKey("communications.Chat", on_delete=models.CASCADE, related_name="messages")
+    sender = models.ForeignKey("users.Profile", on_delete=models.CASCADE, related_name="messages")
+    content = models.TextField(blank=True)
+    file = models.FileField(upload_to="chat_files/", blank=True, null=True)
+    encrypted = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["created"]
-        verbose_name = _("Message")
-        verbose_name_plural = _("Messages")
 
     def __str__(self):
-        return f"From {self.owner} to {self.receiver}"
+        return f"Msg {self.id} from {self.sender}"

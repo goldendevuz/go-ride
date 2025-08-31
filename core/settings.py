@@ -57,8 +57,8 @@ THIRD_APPS = {
 }
 
 LOCAL_APPS = [
-    'apps.v1.shared',
     'apps.v1.users',
+    'apps.v1.shared',
     'apps.v1.rides',
     'apps.v1.finances',
     'apps.v1.communications',
@@ -203,7 +203,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -274,6 +273,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 }
+
 
 # Use compressed static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
