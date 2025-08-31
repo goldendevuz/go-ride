@@ -19,7 +19,7 @@ run:
 git-rm-idea:
 	git rm -r --cached .idea/
 collect:
-	python manage.py collectstatic --no-input
+	python manage.py collectstatic --noinput
 rm-static:
 	rm -rf staticfiles/
 migration:
@@ -48,10 +48,12 @@ tunnel:
 open-bash:
 	sudo docker exec -it goride_api bash
 down:
-	sudo docker compose down
+	sudo docker compose down -v
 up:
-	sudo docker compose up -d --build
+	sudo docker compose up --build
 logs:
 	sudo docker compose logs
 restart:
 	sudo docker rm -f goride_api goride_nginx goride_redis & make down & make up
+seed_languages:
+	python manage.py seed_languages
