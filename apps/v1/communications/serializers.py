@@ -1,28 +1,41 @@
 from rest_framework import serializers
 from parler_rest.serializers import TranslatableModelSerializer
-from .models import ContactSupport, Message, Image
+from apps.v1.communications.models import Chat, Message, ContactSupport, Image
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = "__all__"
+
 
 class ContactSupportSerializer(TranslatableModelSerializer):
     class Meta:
         model = ContactSupport
         fields = ("id", "name", "icon", "display_order", "url")
 
-class ImageSerializer(serializers.ModelSerializer):
+
+class ChatSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
-        fields = ["id", "file", "alt_text"]
+        model = Chat
+        fields = ["id", "user1", "user2", "created"]
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    owner_name = serializers.CharField(source="owner.user.get_full_name", read_only=True)
-    receiver_name = serializers.CharField(source="receiver.user.get_full_name", read_only=True)
-    images = ImageSerializer(many=True, read_only=True)
+    sender_username = serializers.CharField(source="sender.username", read_only=True)
+    images = ImageSerializer(many=True, read_only=True)  # ManyToManyField to global Image model
 
     class Meta:
         model = Message
         fields = [
-            "id", "owner", "owner_name",
-            "receiver", "receiver_name",
-            "text", "images", "has_read", "created"
+            "id",
+            "chat",
+            "sender",
+            "sender_username",
+            "content",
+            "encrypted",
+            "images",
+            "created",
         ]
-        read_only_fields = ["id", "created", "owner_name", "receiver_name"]
+        read_only_fields = ["id", "created"]
+

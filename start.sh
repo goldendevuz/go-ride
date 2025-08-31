@@ -1,17 +1,19 @@
 #!/bin/bash
+set -e
 
-set -e  # Exit on any error
+# Load environment variables manually
+ENV_FILE="/usr/src/app/core/.env"
+if [ -f "$ENV_FILE" ]; then
+  echo "🔑 Loading environment variables from $ENV_FILE"
+  export $(grep -v '^#' "$ENV_FILE" | xargs)
+else
+  echo "⚠️  No .env file found at $ENV_FILE"
+fi
 
-# Apply database migrations
-make mig
-
-# Collect static files
-make collect
-
+echo "✅ Django is ready."
 echo ""
 echo "========== Starting Tunnels =========="
 
-# Start jprq tunnel
 if [ -n "$JPRQ_AUTH_KEY" ]; then
   echo "Authenticating jprq..."
   jprq auth "$JPRQ_AUTH_KEY"
@@ -21,23 +23,14 @@ if [ -n "$JPRQ_AUTH_KEY" ]; then
   JPRQ_URL=$(grep -o 'https://[a-zA-Z0-9.-]*\.jprq\.site' jprq.log | head -n1)
 fi
 
-# Start ngrok tunnel
-# if [ -n "$NGROK_AUTH_TOKEN" ]; then
-#   echo "Authenticating ngrok..."
-#   ngrok config add-authtoken "$NGROK_AUTH_TOKEN"
-#   echo "Starting ngrok tunnel on port 1026..."
-#   ngrok http --url=$NGROK_URL 1026 > /dev/null &
-#   sleep 2
-# fi
-
-# Show tunnel URLs
 echo ""
 echo "========== Public URLs =========="
 [ -n "$JPRQ_URL" ] && echo "🌀 jprq  → $JPRQ_URL"
-# [ -n "$NGROK_URL" ] && echo "🚀 ngrok → https://$NGROK_URL"
 echo "================================="
 
-# Start the Uvicorn ASGI server
-echo ""
-echo "Starting Uvicorn ASGI server..."
-make run-asgi
+echo "🚀 Starting Uvicorn ASGI server with reload..."
+exec uvicorn core.asgi:application \
+    --host 0.0.0.0 \
+    --port 1026 \
+    --reload \
+    --reload-dir /usr/src/app

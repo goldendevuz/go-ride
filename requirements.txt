@@ -1,32 +1,48 @@
-django
+# ─── Core ───────────────────────────────────────────────
+Django
 djangorestframework
+django-filter
+psycopg2-binary
 python-decouple
-djangorestframework-simplejwt
 pillow
-django-daisy
-icecream
+
+# ─── Authentication / Security ──────────────────────────
+djangorestframework-simplejwt
+django-ratelimit
+cryptography
+
+# ─── API Docs / Schema / Errors ─────────────────────────
+drf-spectacular[sidecar]
+drf-standardized-errors
+django-schema-viewer
+djangorestframework-jsonapi[django-filter]
+
+# ─── Internationalization / Translations ────────────────
+django-parler
+django-parler-rest
+django-modeltranslation
+django-rosetta
+
+# ─── Messaging / Async / Real-time ──────────────────────
+adrf
+
+# ─── Task Queue / Scheduling ────────────────────────────
+celery[redis,rabbitmq]
+flower
+django-celery-beat
+django-celery-results
+
+# ─── Admin / Import / Export / Debug ────────────────────
+django-import-export[all]
+django-debug-toolbar
+django-daisy  # UI helper
+django-redis  # caching backend
+redis  # caching backend
+Faker         # test data generation
+icecream      # debugging helper
+
+# ─── Deployment / ASGI / WSGI ───────────────────────────
 uvicorn[standard]
 gunicorn
 whitenoise
-django-debug-toolbar
 django-cors-headers
-django-import-export[all]
-drf-standardized-errors
-psycopg2-binary
-django-filter
-django-redis
-django-ratelimit
-django-schema-viewer
-celery[redis,rabbitmq]
-flower
-adrf
-drf-spectacular[sidecar]
-djangorestframework-jsonapi[django-filter]
-Faker
-django-rosetta
-django-parler
-django-parler-rest
-django-celery-beat
-django-celery-results
-channels
-channels-redis

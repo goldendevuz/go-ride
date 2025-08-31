@@ -48,7 +48,7 @@ tunnel:
 open-bash:
 	sudo docker exec -it goride_api bash
 down:
-	sudo docker compose down
+	sudo docker compose down -v
 up:
 	sudo docker compose up --build
 logs:
